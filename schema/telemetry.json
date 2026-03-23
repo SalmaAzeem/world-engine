@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "building": "01", 
+    "floor": 5, 
+    "room": 502, 
+    "sensor_id": "b01-f5-r502", 
+    "timestamp": 1774290611
+  }, 
+  "actuators": {
+    "lighting_dimmer": 0, 
+    "hvac_mode": "ECO"
+  }, 
+  "sensors": {
+    "humidity": 40.0, 
+    "temperature": 24.0, 
+    "occupancy": false, 
+    "light_level": 50
+  }
+}
