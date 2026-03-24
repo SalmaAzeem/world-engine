@@ -1,0 +1,22 @@
+#  MQTT Broker 
+broker: "broker.hivemq.com"
+port: 1883
+
+floors: 10
+rooms_per_floor: 20
+
+# Thermal Constants (Member 3 physics) 
+outside_temp: 30        # baseline ambient °C
+alpha: 0.01             # insulation constant (thermal leakage)
+beta: 0.2               # HVAC strength per tick
+
+# Timing 
+publish_interval: 5     # seconds between MQTT publishes
+max_jitter: 5           # max startup delay (thundering-herd prevention)
+time_acceleration: 1.0  # 1.0 = real-time; 12.0 = 12× speed
+
+# Heartbeat
+heartbeat_timeout: 60   # seconds before a room is flagged OFFLINE
+
+# Fault Injection 
+fault_probability: 0.01 # probability of a fault per tick (1%)
