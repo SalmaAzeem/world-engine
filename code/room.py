@@ -3,7 +3,6 @@ import asyncio
 import random
 import json
 
-
 class Room:
     def __init__(self, building, room, floor, state, db_manager, config, heartbeat_tracker):
         self.building = building
@@ -22,6 +21,12 @@ class Room:
         self.db_manager = db_manager
         self.config = config
         self.heartbeat_tracker = heartbeat_tracker
+        
+        self.enable_drift = False   # these variables are for fault modeling 
+        self.enable_freeze = False
+        self.enable_dropout = False
+        self.drift_bias = 0
+        self.frozen_temp = None
 
     def update_temperature(self, outside_temp):
         alpha = self.config["alpha"]
@@ -46,6 +51,7 @@ class Room:
             self.temp += 1
 
     async def run_simulation(self, mqtt_client):
+
         await asyncio.sleep(random.uniform(0, self.config["max_jitter"]))
 
         while True:
@@ -63,7 +69,11 @@ class Room:
                 hvac_mode=self.hvac_mode,
                 timestamp=int(time.time())
             )
-
+            faulty_temp = self.apply_faults(self.temp)
+            # Node dropout (no telemetry sent)
+            if faulty_temp is None:
+                await asyncio.sleep(self.config["publish_interval"])
+                continue
             payload = {
                 "metadata": {
                     "sensor_id": self.id,
@@ -73,7 +83,7 @@ class Room:
                     "timestamp": int(time.time())
                 },
                 "sensors": {
-                    "temperature": round(self.temp, 2),
+                    "temperature": round(faulty_temp, 2),
                     "humidity": round(self.humidity, 2),
                     "occupancy": self.occupancy,
                     "light_level": self.light_level
@@ -94,3 +104,19 @@ class Room:
             elapsed = time.perf_counter() - start
             interval = self.config["publish_interval"]
             await asyncio.sleep(max(0, interval - elapsed))
+    
+        def apply_faults(self, value):
+            # 1) Frozen sensor
+            if self.enable_freeze:
+                if self.frozen_temp is None:
+                    self.frozen_temp = value
+                return self.frozen_temp
+            # 2) Sensor drift
+            if self.enable_drift:
+                self.drift_bias += 0.05
+                value += self.drift_bias
+            # 3) Node dropout
+            if self.enable_dropout:
+                if random.random() < 0.3:
+                    return None
+            return value
