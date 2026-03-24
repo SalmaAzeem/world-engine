@@ -4,4 +4,3 @@
 /code/venv
 /code/venv/Lib/site-packages/gmqtt
 /code/venv/Lib/site-packages/gmqtt/mqtt/handler.py
-/benchmark_metrics.csv
