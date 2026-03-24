@@ -1,1 +1,6 @@
 /venv
+/__pycache__
+/code/__pycache__
+/code/venv
+/code/venv/Lib/site-packages/gmqtt
+/code/venv/Lib/site-packages/gmqtt/mqtt/handler.py

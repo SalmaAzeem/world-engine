@@ -15,7 +15,8 @@ async def main():
     await client.connect(BROKER, port=1883)
 
     # subscribe to alll topics
-    client.subscribe("campus/#")
+    # client.subscribe("campus/#")
+    client.subscribe("campus/bldg_01/floor_05/room_502/telemetry")
 
     print(" Listening for messages...\n")
 
