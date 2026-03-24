@@ -1,0 +1,8 @@
+outside_temp: 30
+alpha: 0.01
+beta: 0.2
+publish_interval: 5
+max_jitter: 5
+
+floors: 5
+rooms_per_floor: 40
