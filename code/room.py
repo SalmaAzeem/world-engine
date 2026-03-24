@@ -1,7 +1,7 @@
 import asyncio
 import json
 import random
-import json
+import time
 
 
 class Room:
@@ -106,6 +106,6 @@ class Room:
                 mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload), qos=2)
                 mqtt_client.publish(f"{self.path}/status", "alive")
 
-            elapsed = time.perf_counter() - start
+            elapsed = time.perf_counter() - tick_start
             interval = self.config["publish_interval"]
             await asyncio.sleep(max(0, interval - elapsed))

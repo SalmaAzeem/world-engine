@@ -79,8 +79,9 @@ async def main():
     heartbeat_tracker = {}
 
     
-    broker = config.get("broker", "broker.hivemq.com")
-    port   = config.get("port", 1883)
+    import os
+    broker = os.environ.get("MQTT_BROKER", config.get("broker", "broker.hivemq.com"))
+    port   = int(os.environ.get("MQTT_PORT", config.get("port", 1883)))
 
     client = Client("world-engine")
     client.set_config({"reconnect_retries": -1})   
