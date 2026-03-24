@@ -1,0 +1,113 @@
+DB initialized
+Background sync started (30s interval)
+[MQTT] Connected to broker
+Injected defaults for 200 missing rooms
+[ENGINE] 200 rooms loaded
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.3ms, Max Latency 6.0ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.5ms, Max Latency 5.8ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.5ms, Max Latency 5.4ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.4ms, Max Latency 5.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.3ms, Max Latency 5.4ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.5ms, Max Latency 8.5ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 1.7ms, Max Latency 10.4ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.1ms, Max Latency 10.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.6ms, Max Latency 10.5ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.6ms, Max Latency 6.9ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.7ms, Max Latency 7.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.9ms, Max Latency 12.2ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.7ms, Max Latency 7.0ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 2.7ms, Max Latency 6.8ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.0ms, Max Latency 7.3ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.0ms, Max Latency 7.0ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.0ms, Max Latency 7.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.1ms, Max Latency 13.7ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 26.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.3ms, Max Latency 7.5ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 6.8ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.1ms, Max Latency 6.8ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.1ms, Max Latency 7.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 6.9ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.3ms, Max Latency 6.8ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.4ms, Max Latency 7.3ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 7.0ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 7.0ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.4ms, Max Latency 7.6ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.2ms, Max Latency 6.7ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.4ms, Max Latency 7.5ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.3ms, Max Latency 7.3ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.4ms, Max Latency 11.5ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.4ms, Max Latency 7.1ms over last 60s
+Synced 200 rooms to DB
+Synced 200 rooms to DB
+Event Loop: Avg Latency 3.5ms, Max Latency 7.4ms over last 60s
