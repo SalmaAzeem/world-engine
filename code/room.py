@@ -5,7 +5,7 @@ import json
 
 
 class Room:
-    def __init__(self, building, room, floor, state, db_manager, config):
+    def __init__(self, building, room, floor, state, db_manager, config, heartbeat_tracker):
         self.building = building
         self.floor = floor
         self.room = room
@@ -21,6 +21,7 @@ class Room:
 
         self.db_manager = db_manager
         self.config = config
+        self.heartbeat_tracker = heartbeat_tracker
 
     def update_temperature(self, outside_temp):
         alpha = self.config["alpha"]
@@ -82,8 +83,12 @@ class Room:
                     "lighting_dimmer": 100 if self.occupancy else 0
                 }
             }
+
+            
+            self.heartbeat_tracker[self.id] = time.time()
+
             if mqtt_client.is_connected:
-                mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload),qos=2)
+                mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload), qos=2)
                 mqtt_client.publish(f"{self.path}/status", "alive")
 
             elapsed = time.perf_counter() - start
