@@ -53,6 +53,26 @@ class Room:
             self.light_level = max(self.light_level, threshold)
             self.temp += 0.1   
 
+    def trigger_faults(self):
+        if self.enable_drift and random.random() < 0.05:
+            self.enable_drift = False
+        if self.enable_freeze and random.random() < 0.05:
+            self.enable_freeze = False
+        if self.enable_dropout and random.random() < 0.10:
+            self.enable_dropout = False
+
+        fault_prob = self.config.get("fault_probability", 0.01)
+        if random.random() < fault_prob:
+            fault_type = random.choice(["drift", "freeze", "dropout"])
+            if fault_type == "drift" and not self.enable_drift:
+                self.enable_drift = True
+                self.drift_bias = random.uniform(-5.0, 5.0)
+            elif fault_type == "freeze" and not self.enable_freeze:
+                self.enable_freeze = True
+                self.frozen_temp = self.temp
+            elif fault_type == "dropout":
+                self.enable_dropout = True
+
     #Main async simulation loop 
     async def run_simulation(self, mqtt_client):
         await asyncio.sleep(random.uniform(0, self.config["max_jitter"]))
@@ -79,6 +99,13 @@ class Room:
                 timestamp=int(time.time()),
             )
 
+            self.trigger_faults()
+            reported_temp = self.temp
+            if self.enable_freeze:
+                reported_temp = self.frozen_temp
+            elif self.enable_drift:
+                reported_temp += self.drift_bias
+
             payload = {
                 "metadata": {
                     "sensor_id": self.id,
@@ -88,7 +115,7 @@ class Room:
                     "timestamp": int(time.time()),
                 },
                 "sensors": {
-                    "temperature": round(self.temp, 2),
+                    "temperature": round(reported_temp, 2),
                     "humidity": round(self.humidity, 2),
                     "occupancy": self.occupancy,
                     "light_level": self.light_level
@@ -99,12 +126,11 @@ class Room:
                 },
             }
 
-            
-            self.heartbeat_tracker[self.id] = time.time()
-
-            if mqtt_client.is_connected:
-                mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload), qos=2)
-                mqtt_client.publish(f"{self.path}/status", "alive")
+            if not self.enable_dropout:
+                self.heartbeat_tracker[self.id] = time.time()
+                if mqtt_client.is_connected:
+                    mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload), qos=2)
+                    mqtt_client.publish(f"{self.path}/status", "alive")
 
             elapsed = time.perf_counter() - tick_start
             interval = self.config["publish_interval"]
