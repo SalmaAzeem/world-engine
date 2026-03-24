@@ -58,13 +58,44 @@ def on_disconnect(client, packet, exc=None):
 # Heartbeat monitor 
 
 async def check_heartbeats(heartbeat_tracker, timeout):
-    """Periodically scan the heartbeat tracker and warn about silent rooms."""
     while True:
         await asyncio.sleep(10)
         now = time.time()
         for room_id, last_seen in heartbeat_tracker.items():
             if now - last_seen > timeout:
                 print(f"[WARNING] {room_id} is OFFLINE (last seen {int(now - last_seen)}s ago)")
+
+async def latency_monitor():
+    max_latency = 0.0
+    total_latency = 0.0
+    ticks = 0
+    last_report = time.time()
+
+    while True:
+        start_time = time.perf_counter()
+        await asyncio.sleep(0.1)
+        end_time = time.perf_counter()
+
+        # expected wait = 0.1s
+        latency = (end_time - start_time) - 0.1
+        if latency < 0:
+            latency = 0.0
+
+        max_latency = max(max_latency, latency)
+        total_latency += latency
+        ticks += 1
+
+        if latency > 0.200:
+            print(f"[WARNING] High event loop latency detected: {latency*1000:.1f}ms (threshold 200ms)")
+
+        now = time.time()
+        if now - last_report >= 60.0:
+            avg_latency = total_latency / ticks if ticks > 0 else 0
+            print(f"Event Loop: Avg Latency {avg_latency*1000:.1f}ms, Max Latency {max_latency*1000:.1f}ms over last 60s")
+            max_latency = 0.0
+            total_latency = 0.0
+            ticks = 0
+            last_report = now
 
 
 
@@ -98,6 +129,7 @@ async def main():
     timeout = config.get("heartbeat_timeout", 60)
     tasks = [asyncio.create_task(room.run_simulation(client)) for room in rooms]
     tasks.append(asyncio.create_task(check_heartbeats(heartbeat_tracker, timeout)))
+    tasks.append(asyncio.create_task(latency_monitor()))
 
     try:
         await asyncio.gather(*tasks, return_exceptions=True)
