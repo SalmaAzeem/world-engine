@@ -16,8 +16,8 @@ async def main():
     await client.connect(BROKER, port=int(os.environ.get("MQTT_PORT", 1883)))
 
     # subscribe to alll topics
-    client.subscribe("campus/#")
-    #client.subscribe("campus/bldg_01/floor_05/room_502/telemetry")
+    client.subscribe("campus/bldg_01/#")
+    # client.subscribe("campus/bldg_01/floor_05/room_502/telemetry")
 
     print(" Listening for messages...\n")
 
