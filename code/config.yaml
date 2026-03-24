@@ -2,8 +2,8 @@
 broker: "broker.hivemq.com"
 port: 1883
 
-floors: 5
-rooms_per_floor: 40
+floors: 10
+rooms_per_floor: 20
 
 # Thermal Constants (Member 3 physics) 
 outside_temp: 30        # baseline ambient °C
