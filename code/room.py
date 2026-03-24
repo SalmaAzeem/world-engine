@@ -1,7 +1,7 @@
 import asyncio
 import json
 import random
-import time
+import json
 
 
 class Room:
@@ -24,6 +24,12 @@ class Room:
         self.db_manager       = db_manager
         self.config           = config
         self.heartbeat_tracker = heartbeat_tracker
+        
+        self.enable_drift = False   # these variables are for fault modeling 
+        self.enable_freeze = False
+        self.enable_dropout = False
+        self.drift_bias = 0
+        self.frozen_temp = None
 
     # Thermal model 
     def update_temperature(self, outside_temp):
@@ -49,7 +55,6 @@ class Room:
 
     #Main async simulation loop 
     async def run_simulation(self, mqtt_client):
-        # Startup jitter 
         await asyncio.sleep(random.uniform(0, self.config["max_jitter"]))
 
         # Time acceleration
@@ -74,7 +79,6 @@ class Room:
                 timestamp=int(time.time()),
             )
 
-           
             payload = {
                 "metadata": {
                     "sensor_id": self.id,
@@ -85,9 +89,9 @@ class Room:
                 },
                 "sensors": {
                     "temperature": round(self.temp, 2),
-                    "humidity":    round(self.humidity, 2),
-                    "occupancy":   self.occupancy,
-                    "light_level": int(self.light_level),
+                    "humidity": round(self.humidity, 2),
+                    "occupancy": self.occupancy,
+                    "light_level": self.light_level
                 },
                 "actuators": {
                     "hvac_mode":       self.hvac_mode,
@@ -99,25 +103,9 @@ class Room:
             self.heartbeat_tracker[self.id] = time.time()
 
             if mqtt_client.is_connected:
-               
-                mqtt_client.publish(
-                    f"{self.path}/telemetry",
-                    json.dumps(payload),
-                    qos=1,
-                )
+                mqtt_client.publish(f"{self.path}/telemetry", json.dumps(payload), qos=2)
+                mqtt_client.publish(f"{self.path}/status", "alive")
 
-               
-                heartbeat = {
-                    "sensor_id": self.id,
-                    "status":    "healthy",
-                    "timestamp": int(time.time()),
-                }
-                mqtt_client.publish(
-                    f"{self.path}/status",
-                    json.dumps(heartbeat),
-                )
-
-          
-            elapsed = time.perf_counter() - tick_start
-            target_interval = self.config["publish_interval"] / time_accel
-            await asyncio.sleep(max(0, target_interval - elapsed))
+            elapsed = time.perf_counter() - start
+            interval = self.config["publish_interval"]
+            await asyncio.sleep(max(0, interval - elapsed))
