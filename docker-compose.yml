@@ -1,294 +1,168 @@
+version: "3.8"
+
 services:
   hivemq:
-    image: hivemq/hivemq-ce
-    container_name: campus-hivemq
+    image: hivemq/hivemq-ce:latest
+    container_name: hivemq-hub
     ports:
       - "1883:1883"
-    volumes:
-      - hivemq_data:/opt/hivemq/data
-      - hivemq_log:/opt/hivemq/log
+      - "8080:8080"
     networks:
-      - campus
-    restart: unless-stopped
+      - iot_net
+    restart: always
 
-  postgres:
-    image: postgres:16
-    container_name: campus-postgres
-    environment:
-      POSTGRES_DB: thingsboard
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - campus
-    restart: unless-stopped
-
-  thingsboard-ce:
-    image: thingsboard/tb-node:4.3.1.1
-    container_name: campus-thingsboard
-    depends_on:
-      - postgres
+  thingsboard:
+    image: thingsboard/tb-postgres:latest
+    container_name: thingsboard-cloud
     ports:
       - "9090:8080"
-      - "7070:7070"
+      - "1884:1883"
+      - "5683-5688:5683-5688/udp"
     environment:
-      TB_SERVICE_ID: tb-ce-node
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/thingsboard
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      TB_QUEUE_TYPE: in-memory
-    volumes:
-      - thingsboard_data:/data
-      - thingsboard_logs:/var/log/thingsboard
+      - TB_QUEUE_TYPE=in-memory
     networks:
-      - campus
-    restart: unless-stopped
-
-  engine:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: campus-world-engine
+      - iot_net
+    restart: always
     depends_on:
       - hivemq
-    environment:
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      COAP_BIND_HOST: 0.0.0.0
-      COAP_PUBLIC_HOST: engine
-      DB_PATH: /app/data/state.db
-      PYTHONUNBUFFERED: 1
+
+  nodered-1:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-1
     ports:
-      - "25000-25099:25000-25099/udp"
-    volumes:
-      - engine_data:/app/data
+      - "18801:1880"
     networks:
-      - campus
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-2:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-2
+    ports:
+      - "18802:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-3:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-3
+    ports:
+      - "18803:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-4:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-4
+    ports:
+      - "18804:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-5:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-5
+    ports:
+      - "18805:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-6:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-6
+    ports:
+      - "18806:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-7:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-7
+    ports:
+      - "18807:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-8:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-8
+    ports:
+      - "18808:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-9:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-9
+    ports:
+      - "18809:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-10:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-10
+    ports:
+      - "18810:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  engine:
+    build: .
+    container_name: world-engine
+    environment:
+      - MQTT_BROKER=hivemq
+      - MQTT_PORT=1883
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - hivemq
+    networks:
+      - iot_net
     restart: unless-stopped
 
   subscriber:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: campus-world-engine-subscriber
-    command: ["python", "subscriber.py"]
-    profiles: ["debug"]
+    build: .
+    container_name: world-engine-subscriber
+    command: [ "python", "subscriber.py" ]
+    environment:
+      - MQTT_BROKER=hivemq
+      - MQTT_PORT=1883
+      - PYTHONUNBUFFERED=1
     depends_on:
       - hivemq
-      - engine
-    environment:
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      PYTHONUNBUFFERED: 1
     networks:
-      - campus
+      - iot_net
     restart: unless-stopped
-
-  gateway-f01: &gateway-template
-    image: nodered/node-red:latest
-    container_name: gateway-f01
-    depends_on:
-      - hivemq
-      - engine
-    ports:
-      - "1891:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "01"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f01/#
-      MQTT_COMMAND_TOPIC: campus/b01/f01/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25000
-      COAP_PORT_END: 25009
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor01:/data
-    networks:
-      - campus
-    restart: unless-stopped
-
-  gateway-f02:
-    <<: *gateway-template
-    container_name: gateway-f02
-    ports:
-      - "1892:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "02"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f02/#
-      MQTT_COMMAND_TOPIC: campus/b01/f02/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25010
-      COAP_PORT_END: 25019
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor02:/data
-
-  gateway-f03:
-    <<: *gateway-template
-    container_name: gateway-f03
-    ports:
-      - "1893:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "03"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f03/#
-      MQTT_COMMAND_TOPIC: campus/b01/f03/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25020
-      COAP_PORT_END: 25029
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor03:/data
-
-  gateway-f04:
-    <<: *gateway-template
-    container_name: gateway-f04
-    ports:
-      - "1894:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "04"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f04/#
-      MQTT_COMMAND_TOPIC: campus/b01/f04/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25030
-      COAP_PORT_END: 25039
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor04:/data
-
-  gateway-f05:
-    <<: *gateway-template
-    container_name: gateway-f05
-    ports:
-      - "1895:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "05"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f05/#
-      MQTT_COMMAND_TOPIC: campus/b01/f05/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25040
-      COAP_PORT_END: 25049
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor05:/data
-
-  gateway-f06:
-    <<: *gateway-template
-    container_name: gateway-f06
-    ports:
-      - "1896:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "06"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f06/#
-      MQTT_COMMAND_TOPIC: campus/b01/f06/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25050
-      COAP_PORT_END: 25059
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor06:/data
-
-  gateway-f07:
-    <<: *gateway-template
-    container_name: gateway-f07
-    ports:
-      - "1897:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "07"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f07/#
-      MQTT_COMMAND_TOPIC: campus/b01/f07/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25060
-      COAP_PORT_END: 25069
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor07:/data
-
-  gateway-f08:
-    <<: *gateway-template
-    container_name: gateway-f08
-    ports:
-      - "1898:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "08"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f08/#
-      MQTT_COMMAND_TOPIC: campus/b01/f08/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25070
-      COAP_PORT_END: 25079
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor08:/data
-
-  gateway-f09:
-    <<: *gateway-template
-    container_name: gateway-f09
-    ports:
-      - "1899:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "09"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f09/#
-      MQTT_COMMAND_TOPIC: campus/b01/f09/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25080
-      COAP_PORT_END: 25089
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor09:/data
-
-  gateway-f10:
-    <<: *gateway-template
-    container_name: gateway-f10
-    ports:
-      - "1900:1880"
-    environment:
-      TZ: Africa/Cairo
-      FLOOR_ID: "10"
-      MQTT_BROKER: hivemq
-      MQTT_PORT: 1883
-      MQTT_FLOOR_TOPIC: campus/b01/f10/#
-      MQTT_COMMAND_TOPIC: campus/b01/f10/+/cmd
-      COAP_BASE_URI: coap://engine
-      COAP_PORT_START: 25090
-      COAP_PORT_END: 25099
-      THINGSBOARD_URL: http://thingsboard-ce:8080
-    volumes:
-      - ./infra/nodered/floor10:/data
-
-volumes:
-  engine_data:
-  hivemq_data:
-  hivemq_log:
-  postgres_data:
-  thingsboard_data:
-  thingsboard_logs:
 
 networks:
-  campus:
-    name: campus-iot-network
+  iot_net:
+    driver: bridge
