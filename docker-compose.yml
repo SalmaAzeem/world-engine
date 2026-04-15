@@ -1,0 +1,168 @@
+version: "3.8"
+
+services:
+  hivemq:
+    image: hivemq/hivemq-ce:latest
+    container_name: hivemq-hub
+    ports:
+      - "1883:1883"
+      - "8080:8080"
+    networks:
+      - iot_net
+    restart: always
+
+  thingsboard:
+    image: thingsboard/tb-postgres:latest
+    container_name: thingsboard-cloud
+    ports:
+      - "9090:8080"
+      - "1884:1883"
+      - "5683-5688:5683-5688/udp"
+    environment:
+      - TB_QUEUE_TYPE=in-memory
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-1:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-1
+    ports:
+      - "18801:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-2:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-2
+    ports:
+      - "18802:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-3:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-3
+    ports:
+      - "18803:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-4:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-4
+    ports:
+      - "18804:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-5:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-5
+    ports:
+      - "18805:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-6:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-6
+    ports:
+      - "18806:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-7:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-7
+    ports:
+      - "18807:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-8:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-8
+    ports:
+      - "18808:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-9:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-9
+    ports:
+      - "18809:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  nodered-10:
+    image: nodered/node-red:latest
+    container_name: nodered-gateway-10
+    ports:
+      - "18810:1880"
+    networks:
+      - iot_net
+    restart: always
+    depends_on:
+      - hivemq
+
+  engine:
+    build: .
+    container_name: world-engine
+    environment:
+      - MQTT_BROKER=hivemq
+      - MQTT_PORT=1883
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - hivemq
+    networks:
+      - iot_net
+    restart: unless-stopped
+
+  subscriber:
+    build: .
+    container_name: world-engine-subscriber
+    command: [ "python", "subscriber.py" ]
+    environment:
+      - MQTT_BROKER=hivemq
+      - MQTT_PORT=1883
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - hivemq
+    networks:
+      - iot_net
+    restart: unless-stopped
+
+networks:
+  iot_net:
+    driver: bridge
