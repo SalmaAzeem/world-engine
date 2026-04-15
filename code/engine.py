@@ -1,122 +1,130 @@
+from __future__ import annotations
+
 import asyncio
 import sqlite3
 import sys
 import time
+from pathlib import Path
+
 import yaml
 
-from gmqtt import Client
-from room import Room
 from db_manager import DBManager
+from fleet import build_fleet
+from protocols import CoAPNode, MQTTNode
+from services import HealthMonitor
 
 
-def load_config(path="config.yaml"):
-    """Load configuration from YAML file."""
-    with open(path) as f:
-        return yaml.safe_load(f)
+BASE_DIR = Path(__file__).resolve().parent
 
 
-def create_rooms(db_manager, config, heartbeat_tracker):
-    """Instantiate Room objects from persisted DB state."""
-    rooms = []
-    states = db_manager.load_state()
+def load_config(path=BASE_DIR / "config.yaml"):
+    with open(path, "r", encoding="utf-8") as file_handle:
+        return yaml.safe_load(file_handle)
 
-    for rid, state in states.items():
-        parts = rid.split("-")
-        building = parts[0][1:]          # "01"
-        floor    = int(parts[1][1:])     # 5
-        room_num = int(parts[2][1:])     # 502
 
-        init_state = {
-            "temperature": state["last_temp"],
-            "humidity":    state["last_humidity"],
-            "occupancy":   False,
-            "light_level": 100,
-            "hvac_mode":   state["hvac_mode"],
-        }
+def create_transports(rooms, config, health_monitor):
+    transports = {}
+    for room in rooms:
+        if room.protocol == "mqtt":
+            transports[room.room_id] = MQTTNode(room, config, health_monitor)
+        else:
+            transports[room.room_id] = CoAPNode(room, config, health_monitor)
+    return transports
 
-        rooms.append(
-            Room(building, room_num, floor, init_state, db_manager, config, heartbeat_tracker)
+
+async def room_loop(room, transport, db_manager, health_monitor, config, real_start, simulated_start):
+    await asyncio.sleep(_startup_jitter(config))
+
+    while True:
+        tick_started = time.perf_counter()
+        simulated_now = simulated_start + (
+            (tick_started - real_start) * config["time_acceleration"]
         )
 
-    return rooms
+        payload = room.tick(simulated_now, config)
+        db_manager.update_room(
+            room.room_id,
+            last_temp=room.temperature,
+            last_humidity=room.humidity,
+            hvac_mode=room.hvac_mode,
+            target_temp=room.target_temp,
+            timestamp=int(simulated_now),
+        )
+        health_monitor.record_heartbeat(room.room_id, room.protocol)
+        await transport.publish_telemetry(payload)
+
+        elapsed = time.perf_counter() - tick_started
+        await asyncio.sleep(max(0.0, config["tick_interval"] - elapsed))
 
 
-#  MQTT callbacks
+def _startup_jitter(config):
+    import random
 
-
-def on_connect(client, flags, rc, properties):
-    print("[MQTT] Connected to broker")
-
-
-def on_disconnect(client, packet, exc=None):
-    if exc:
-        print(f"[MQTT] Disconnected with error: {exc} — waiting for auto-reconnect...")
-    else:
-        print("[MQTT] Disconnected cleanly — waiting for auto-reconnect...")
-
-
-# Heartbeat monitor 
-
-async def check_heartbeats(heartbeat_tracker, timeout):
-    """Periodically scan the heartbeat tracker and warn about silent rooms."""
-    while True:
-        await asyncio.sleep(10)
-        now = time.time()
-        for room_id, last_seen in heartbeat_tracker.items():
-            if now - last_seen > timeout:
-                print(f"[WARNING] {room_id} is OFFLINE (last seen {int(now - last_seen)}s ago)")
-
+    return random.uniform(0, config["max_jitter"])
 
 
 async def main():
-    config = load_config("config.yaml")
+    config = load_config()
 
-   
-    db = DBManager(config)
-    db.start_background_sync(sync_interval=30)
+    db = DBManager(config, db_path=str(BASE_DIR / "state.db"))
+    db.start_background_sync(sync_interval=config["db_sync_interval"])
 
-   
-    heartbeat_tracker = {}
+    health_monitor = HealthMonitor(
+        timeout_seconds=config["heartbeat_timeout"],
+        check_interval=config["health_check_interval"],
+    )
 
-    
-    broker = config.get("broker", "broker.hivemq.com")
-    port   = config.get("port", 1883)
+    rooms = build_fleet(db, config)
+    for room in rooms:
+        health_monitor.register_room(room)
 
-    client = Client("world-engine")
-    client.set_config({"reconnect_retries": -1})   
-    client.on_connect    = on_connect
-    client.on_disconnect = on_disconnect
+    transports = create_transports(rooms, config, health_monitor)
+    await asyncio.gather(*(transport.start() for transport in transports.values()))
 
-    await client.connect(broker, port=port)
+    print(
+        f"[ENGINE] Loaded {len(rooms)} rooms "
+        f"({sum(room.protocol == 'mqtt' for room in rooms)} MQTT / "
+        f"{sum(room.protocol == 'coap' for room in rooms)} CoAP)"
+    )
 
-    
-    rooms = create_rooms(db, config, heartbeat_tracker)
-    print(f"[ENGINE] {len(rooms)} rooms loaded")
+    real_start = time.perf_counter()
+    simulated_start = time.time()
 
-   
-    timeout = config.get("heartbeat_timeout", 60)
-    tasks = [asyncio.create_task(room.run_simulation(client)) for room in rooms]
-    tasks.append(asyncio.create_task(check_heartbeats(heartbeat_tracker, timeout)))
+    tasks = [
+        asyncio.create_task(
+            room_loop(
+                room,
+                transports[room.room_id],
+                db,
+                health_monitor,
+                config,
+                real_start,
+                simulated_start,
+            )
+        )
+        for room in rooms
+    ]
+    tasks.append(asyncio.create_task(health_monitor.run()))
 
     try:
-        await asyncio.gather(*tasks, return_exceptions=True)
+        await asyncio.gather(*tasks)
     except KeyboardInterrupt:
         pass
     finally:
-        
+        for task in tasks:
+            task.cancel()
+
+        await asyncio.gather(*tasks, return_exceptions=True)
+        await asyncio.gather(*(transport.stop() for transport in transports.values()), return_exceptions=True)
+
         print("\n[SHUTDOWN] Flushing DB state...")
         try:
             con = sqlite3.connect(db.db_path)
             db._sync_impl(con)
             con.close()
             print("[SHUTDOWN] DB flushed successfully.")
-        except Exception as e:
-            print(f"[SHUTDOWN] DB flush error: {e}")
-
-        for t in tasks:
-            t.cancel()
-
-        await client.disconnect()
+        except Exception as exc:
+            print(f"[SHUTDOWN] DB flush error: {exc}")
 
 
 if __name__ == "__main__":

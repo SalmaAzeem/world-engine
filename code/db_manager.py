@@ -38,11 +38,12 @@ class DBManager:
         room_ids = []
         floors = self.config["floors"]
         rooms_per_floor = self.config["rooms_per_floor"]
+        building_id = self.config.get("building_id", "01")
 
         for f in range(1, floors + 1):
             for r in range(1, rooms_per_floor + 1):
                 room_num = (f * 100) + r
-                room_ids.append(f"b01-f{f:02d}-r{room_num}")
+                room_ids.append(f"b{building_id}-f{f:02d}-r{room_num}")
 
         return room_ids
 
@@ -186,6 +187,13 @@ class DBManager:
         thread = threading.Thread(target=sync_worker, daemon=True)
         thread.start()
         print(f"Background sync started ({sync_interval}s interval)")
+
+    def flush(self):
+        con = self.get_connection()
+        try:
+            self._sync_impl(con)
+        finally:
+            con.close()
 
 
 if __name__ == "__main__":

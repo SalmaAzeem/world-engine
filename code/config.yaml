@@ -1,22 +1,35 @@
-#  MQTT Broker 
-broker: "broker.hivemq.com"
-port: 1883
+building_id: "01"
 
-floors: 5
-rooms_per_floor: 40
+floors: 10
+rooms_per_floor: 20
+mqtt_rooms_per_floor: 10
+coap_rooms_per_floor: 10
 
-# Thermal Constants (Member 3 physics) 
-outside_temp: 30        # baseline ambient °C
-alpha: 0.01             # insulation constant (thermal leakage)
-beta: 0.2               # HVAC strength per tick
+mqtt_broker: "broker.hivemq.com"
+mqtt_port: 1883
+mqtt_keepalive: 60
+mqtt_client_prefix: "campus-room"
+mqtt_telemetry_qos: 1
+mqtt_status_qos: 1
+mqtt_command_qos: 2
 
-# Timing 
-publish_interval: 5     # seconds between MQTT publishes
-max_jitter: 5           # max startup delay (thundering-herd prevention)
-time_acceleration: 1.0  # 1.0 = real-time; 12.0 = 12× speed
+coap_bind_host: "127.0.0.1"
+coap_public_host: "127.0.0.1"
+coap_base_port: 25000
+coap_server_transports:
+  - simple6
+  - simplesocketserver
 
-# Heartbeat
-heartbeat_timeout: 60   # seconds before a room is flagged OFFLINE
+outside_temp_day: 30.0
+outside_temp_night: 22.0
+alpha: 0.01
+beta: 0.2
+occupancy_heat: 0.1
+occupied_light_threshold: 300
 
-# Fault Injection 
-fault_probability: 0.01 # probability of a fault per tick (1%)
+tick_interval: 5
+max_jitter: 5
+time_acceleration: 1.0
+heartbeat_timeout: 60
+health_check_interval: 5
+db_sync_interval: 30

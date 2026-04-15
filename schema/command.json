@@ -1,6 +1,7 @@
-{ 
-  "command_id": "cmd-1909", 
-  "target_device": "b01-f5-r502", 
-  "action": "set_lighting", 
-  "value": 50
+{
+  "command_id": "cmd-1909",
+  "target_device": "b01-f01-r101",
+  "hvac_mode": "ECO",
+  "target_temp": 22.0,
+  "lighting_dimmer": 50
 }
