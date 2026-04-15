@@ -3,6 +3,14 @@ from __future__ import annotations
 from gmqtt import Client, Message
 
 from services.command_parser import parse_command_payload
+import json
+import ssl
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+with open(BASE_DIR / "security_keys.json", "r") as f:
+    SECURITY_KEYS = json.load(f)
 
 
 class MQTTNode:
@@ -20,9 +28,15 @@ class MQTTNode:
             ),
         )
         self.client.set_config({"reconnect_retries": -1})
+        self.client.set_auth_credentials(self.room.room_id, SECURITY_KEYS[self.room.room_id]["password"])
         self.client.on_connect = self._on_connect
         self.client.on_disconnect = self._on_disconnect
         self.client.on_message = self._on_message
+        
+        self.ssl_context = ssl.create_default_context(cafile=str(BASE_DIR.parent / "certs" / "server.crt"))
+        self.ssl_context.check_hostname = False
+        self.ssl_context.verify_mode = ssl.CERT_NONE
+
 
     def _client_id(self):
         return f"{self.config['mqtt_client_prefix']}-{self.room.room_id}"
@@ -30,8 +44,9 @@ class MQTTNode:
     async def start(self):
         await self.client.connect(
             self.config["mqtt_broker"],
-            port=self.config["mqtt_port"],
+            port=self.config.get("mqtt_tls_port", 8883),
             keepalive=self.config["mqtt_keepalive"],
+            ssl=self.ssl_context
         )
 
     async def stop(self):

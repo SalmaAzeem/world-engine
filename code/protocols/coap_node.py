@@ -8,6 +8,14 @@ from protocols.coap_resources import (
     LightingActuatorResource,
     TelemetryResource,
 )
+import json
+import aiocoap.credentials
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+with open(BASE_DIR / "security_keys.json", "r") as f:
+    SECURITY_KEYS = json.load(f)
 
 
 class CoAPNode:
@@ -36,8 +44,19 @@ class CoAPNode:
         self.context = await aiocoap.Context.create_server_context(
             self.site,
             bind=(self.config["coap_bind_host"], self.room.coap_port),
-            transports=self.config.get("coap_server_transports"),
+            transports=["tinydtls_server"] if self.config.get("coap_enable_dtls", True) else self.config.get("coap_server_transports"),
         )
+        psk_hex = SECURITY_KEYS[self.room.room_id]["psk"]
+        self.context.server_credentials.load_from_dict({
+            ":client": {
+                "dtls": {
+                    "psk": {
+                        self.room.room_id.encode("utf-8"): bytes.fromhex(psk_hex)
+                    }
+                }
+            }
+        })
+
         self.health_monitor.set_status(self.room.room_id, "ONLINE")
         print(
             f"[CoAP] {self.room.room_id} listening on "
