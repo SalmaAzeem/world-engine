@@ -48,11 +48,10 @@ class CoAPNode:
         )
         psk_hex = SECURITY_KEYS[self.room.room_id]["psk"]
         self.context.server_credentials.load_from_dict({
-            ":client": {
+            f":client:{self.room.room_id}": {
                 "dtls": {
-                    "psk": {
-                        self.room.room_id.encode("utf-8"): bytes.fromhex(psk_hex)
-                    }
+                    "psk": bytes.fromhex(psk_hex),
+                    "client_identity": self.room.room_id.encode("utf-8")
                 }
             }
         })
