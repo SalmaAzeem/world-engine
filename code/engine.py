@@ -1,25 +1,16 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import sqlite3
 import sys
 import time
-from pathlib import Path
 
-import yaml
-
+from config_loader import BASE_DIR, load_config
 from db_manager import DBManager
 from fleet import build_fleet
 from protocols import CoAPNode, MQTTNode
 from services import HealthMonitor
-
-
-BASE_DIR = Path(__file__).resolve().parent
-
-
-def load_config(path=BASE_DIR / "config.yaml"):
-    with open(path, "r", encoding="utf-8") as file_handle:
-        return yaml.safe_load(file_handle)
 
 
 def create_transports(rooms, config, health_monitor):
@@ -66,7 +57,8 @@ def _startup_jitter(config):
 async def main():
     config = load_config()
 
-    db = DBManager(config, db_path=str(BASE_DIR / "state.db"))
+    db_path = os.getenv("DB_PATH", str(BASE_DIR / "state.db"))
+    db = DBManager(config, db_path=db_path)
     db.start_background_sync(sync_interval=config["db_sync_interval"])
 
     health_monitor = HealthMonitor(

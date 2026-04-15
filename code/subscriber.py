@@ -1,16 +1,8 @@
 import asyncio
-from pathlib import Path
 
-import yaml
 from gmqtt import Client
 
-
-BASE_DIR = Path(__file__).resolve().parent
-
-
-def load_config():
-    with open(BASE_DIR / "config.yaml", "r", encoding="utf-8") as file_handle:
-        return yaml.safe_load(file_handle)
+from config_loader import load_config
 
 def on_message(client, topic, payload, qos, properties):
     print(f"\n Topic: {topic}")
