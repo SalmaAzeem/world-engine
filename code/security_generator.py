@@ -44,8 +44,9 @@ def generate_credentials(config):
     
     for floor in range(1, floors + 1):
         for room in range(1, rooms_per_floor + 1):
-            room_id = f"b{building_id}-f{floor:02d}-r{room}"
-            mqtt_base_topic = f"campus/b{building_id}/f{floor:02d}/r{room}"
+            room_num = (floor * 100) + room
+            room_id = f"b{building_id}-f{floor:02d}-r{room_num}"
+            mqtt_base_topic = f"campus/b{building_id}/f{floor:02d}/r{room_num}"
             
             pwd = secrets.token_hex(12)
             psk = secrets.token_hex(16) # DTLS
