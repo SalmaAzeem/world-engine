@@ -1,6 +1,12 @@
 /venv
 /__pycache__
 /code/__pycache__
+/code/**/__pycache__/
 /code/venv
 /code/venv/Lib/site-packages/gmqtt
 /code/venv/Lib/site-packages/gmqtt/mqtt/handler.py
+infra/nodered/**/context/
+infra/nodered/**/lib/
+infra/nodered/**/node_modules/
+infra/nodered/**/flows_cred.json
+infra/nodered/**/.config.*
