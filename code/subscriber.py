@@ -5,10 +5,7 @@ from pathlib import Path
 
 from gmqtt import Client
 
-import yaml
-BASE_DIR = Path(__file__).resolve().parent
-with open(BASE_DIR / "config.yaml", "r") as f:
-    config = yaml.safe_load(f)
+from config_loader import BASE_DIR, load_config
 
 with open(BASE_DIR / "security_keys.json", "r") as f:
     SECURITY_KEYS = json.load(f)
@@ -18,6 +15,7 @@ def on_message(client, topic, payload, qos, properties):
     print(f"Message: {payload.decode()}")
 
 async def main():
+    config = load_config()
     client = Client("subscriber")
     client.set_auth_credentials("subscriber", SECURITY_KEYS["subscriber"]["password"])
 

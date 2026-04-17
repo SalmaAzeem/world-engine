@@ -17,6 +17,7 @@ ENV_MAPPING = {
     "COAP_ROOMS_PER_FLOOR": ("coap_rooms_per_floor", int),
     "MQTT_BROKER": ("mqtt_broker", str),
     "MQTT_PORT": ("mqtt_port", int),
+    "MQTT_TLS_PORT": ("mqtt_tls_port", int),
     "MQTT_KEEPALIVE": ("mqtt_keepalive", int),
     "MQTT_CLIENT_PREFIX": ("mqtt_client_prefix", str),
     "MQTT_TELEMETRY_QOS": ("mqtt_telemetry_qos", int),

@@ -52,7 +52,7 @@ services:
     container_name: world-engine
     environment:
       - MQTT_BROKER=hivemq
-      - MQTT_PORT=8883
+      - MQTT_TLS_PORT=8883
       - PYTHONUNBUFFERED=1
     depends_on:
       - hivemq
@@ -66,7 +66,7 @@ services:
     command: [ "python", "subscriber.py" ]
     environment:
       - MQTT_BROKER=hivemq
-      - MQTT_PORT=8883
+      - MQTT_TLS_PORT=8883
       - PYTHONUNBUFFERED=1
     depends_on:
       - hivemq
