@@ -1,5 +1,20 @@
 version: "3.8"
 
+x-gateway-template: &gateway-template
+  image: nodered/node-red:latest
+  command: bash -c "npm install node-red-contrib-coap && npm start"
+  networks:
+    - iot_net
+  restart: unless-stopped
+  depends_on:
+    - engine
+    - hivemq
+  environment:
+    BUILDING_ID: "01"
+    ENGINE_HOST: "engine"
+  volumes:
+    - ./gateway_flow.json:/data/flows.json
+
 services:
   hivemq:
     image: hivemq/hivemq-ce:latest
@@ -58,6 +73,86 @@ services:
     networks:
       - iot_net
     restart: unless-stopped
+  
+  gateway_f01:
+    <<: *gateway-template
+    container_name: gateway_f01
+    environment:
+      FLOOR_ID: "1"
+    ports:
+      - "1881:1880"
+
+  gateway_f02:
+    <<: *gateway-template
+    container_name: gateway_f02
+    environment:
+      FLOOR_ID: "2"
+    ports:
+      - "1882:1880"
+
+  gateway_f03:
+    <<: *gateway-template
+    container_name: gateway_f03
+    environment:
+      FLOOR_ID: "3"
+    ports:
+      - "1885:1880"
+
+  gateway_f04:
+    <<: *gateway-template
+    container_name: gateway_f04
+    environment:
+      FLOOR_ID: "4"
+    ports:
+      - "1886:1880"
+
+  gateway_f05:
+    <<: *gateway-template
+    container_name: gateway_f05
+    environment:
+      FLOOR_ID: "5"
+    ports:
+      - "1887:1880"
+
+  gateway_f06:
+    <<: *gateway-template
+    container_name: gateway_f06
+    environment:
+      FLOOR_ID: "6"
+    ports:
+      - "1888:1880"
+
+  gateway_f07:
+    <<: *gateway-template
+    container_name: gateway_f07
+    environment:
+      FLOOR_ID: "7"
+    ports:
+      - "1889:1880"
+
+  gateway_f08:
+    <<: *gateway-template
+    container_name: gateway_f08
+    environment:
+      FLOOR_ID: "8"
+    ports:
+      - "1890:1880"
+
+  gateway_f09:
+    <<: *gateway-template
+    container_name: gateway_f09
+    environment:
+      FLOOR_ID: "9"
+    ports:
+      - "1891:1880"
+
+  gateway_f10:
+    <<: *gateway-template
+    container_name: gateway_f10
+    environment:
+      FLOOR_ID: "10"
+    ports:
+      - "1892:1880"
 
 networks:
   iot_net:

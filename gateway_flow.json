@@ -1,0 +1,337 @@
+[
+    {
+        "id": "8f9b1e8e42cf78a6",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e687eff6af2441c4",
+        "type": "mqtt in",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "",
+        "topic": "campus/+/+/+/cmd",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1186826570dc68e4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "6bf0b6b20f1bad94"
+            ]
+        ]
+    },
+    {
+        "id": "6bf0b6b20f1bad94",
+        "type": "function",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "command router",
+        "func": "let parts = msg.topic.split(\"/\");\nlet floor = parseInt(parts[2].replace(\"f\", \"\"));\nlet room_num = parseInt(parts[3].replace(\"r\", \"\"));\n\nif (floor !== parseInt(env.get(\"FLOOR_ID\"))) return null;\n\nlet slot = room_num - (floor * 100);\n\nif (slot > 10) {\n    const engine_host = env.get(\"ENGINE_HOST\") || \"engine\";\n    let port_offset = ((floor - 1) * 10) + (slot - 11);\n    let port = 25000 + port_offset;\n\n    let command_data = JSON.parse(msg.payload);\n    let actuator = command_data.target || \"hvac\";\n    \n    msg.url = `coap://${engine_host}:${port}/f${parts[2]}/r${room_num}/actuators/${actuator}`;\n    msg.method = \"PUT\";\n    \n    msg.confirmable = true; \n    msg.payload = command_data.state;\n    \n    msg.responseTopic = `campus/b01/f${parts[2]}/r${room_num}/response`;\n    \n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 280,
+        "wires": [
+            [
+                "0fc8bd3f0608403c"
+            ]
+        ]
+    },
+    {
+        "id": "0fc8bd3f0608403c",
+        "type": "coap request",
+        "z": "8f9b1e8e42cf78a6",
+        "method": "GET",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": false,
+        "name": "",
+        "x": 550,
+        "y": 320,
+        "wires": [
+            [
+                "917085cb33baa342"
+            ]
+        ]
+    },
+    {
+        "id": "ab4e07ef3ab3afa2",
+        "type": "inject",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "2",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "a1526858668bf32f"
+            ]
+        ]
+    },
+    {
+        "id": "a1526858668bf32f",
+        "type": "function",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "init observers",
+        "func": "const floor = parseInt(env.get(\"FLOOR_ID\"));\nconst engine_host = env.get(\"ENGINE_HOST\") || \"engine\";\nconst floor_str = floor.toString().padStart(2, '0');\n\nlet messages = [];\n\nfor (let i = 0; i < 10; i++) {\n    let slot = 11 + i;\n    let room_num = (floor * 100) + slot;\n\n    let port = 25000 + ((floor - 1) * 10) + i;\n\n    messages.push({\n        payload: \"\",\n        url: `coap://${engine_host}:${port}/f${floor_str}/r${room_num}/telemetry`,\n        method: \"OBSERVE\"\n    });\n}\n\nreturn [messages];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 100,
+        "wires": [
+            [
+                "71535341476c25a0"
+            ]
+        ]
+    },
+    {
+        "id": "71535341476c25a0",
+        "type": "coap request",
+        "z": "8f9b1e8e42cf78a6",
+        "method": "GET",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": false,
+        "name": "",
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "2054e634f25e13e8"
+            ]
+        ]
+    },
+    {
+        "id": "2054e634f25e13e8",
+        "type": "function",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "mqtt translate",
+        "func": "let raw_data = JSON.parse(msg.payload.toString());\nconst floor_str = env.get(\"FLOOR_ID\").toString().padStart(2, '0');\n\nmsg.topic = `campus/b01/f${floor_str}/r${raw_data.room_number}/telemetry`;\n\nmsg.payload = {\n    temperature: raw_data.temperature,\n    humidity: raw_data.humidity,\n    occupancy: raw_data.occupancy\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 100,
+        "wires": [
+            [
+                "59fd5a883ec55558"
+            ]
+        ]
+    },
+    {
+        "id": "cee2a852a3c5d418",
+        "type": "mqtt out",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "50cdfda11cc895d5",
+        "x": 1110,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "305409509bf0614a",
+        "type": "mqtt out",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "1186826570dc68e4",
+        "x": 850,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "59fd5a883ec55558",
+        "type": "join",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "60s edge thinning",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "60",
+        "count": "",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 810,
+        "y": 200,
+        "wires": [
+            [
+                "57e01e3d5cd3d034"
+            ]
+        ]
+    },
+    {
+        "id": "57e01e3d5cd3d034",
+        "type": "function",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "function 19",
+        "func": "let sum = 0;\nlet count = msg.payload.length;\n\nmsg.payload.forEach(reading => {\n    sum += reading.temperature;\n})\n\nmsg.topic = `campus/b01/f${env.get(\"FLOOR_ID\").toString().padStart(2, '0')}/summary`;\nmsg.payload = { average_temp: (sum / count).toFixed(2) };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 160,
+        "wires": [
+            [
+                "cee2a852a3c5d418"
+            ]
+        ]
+    },
+    {
+        "id": "917085cb33baa342",
+        "type": "function",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "function 20",
+        "func": "msg.topic = msg.responseTopic\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 400,
+        "wires": [
+            [
+                "305409509bf0614a"
+            ]
+        ]
+    },
+    {
+        "id": "1186826570dc68e4",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "hivemq",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "50cdfda11cc895d5",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "hivemq",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "17587b3071ce73e7",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-coap": "0.8.0"
+        }
+    }
+]
