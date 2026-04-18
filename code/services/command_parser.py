@@ -32,6 +32,15 @@ def parse_command_payload(payload, default_action=None):
             command["lighting_dimmer"] = _validate_dimmer(data["lighting_dimmer"])
         elif action in {"set_lighting", "set_lighting_dimmer"}:
             command["lighting_dimmer"] = _validate_dimmer(data["value"])
+
+        if "message_id" in data:
+            command["message_id"] = str(data["message_id"])
+            
+        if "emergency_lockout" in data:
+            command["emergency_lockout"] = bool(data["emergency_lockout"])
+            
+        if "smoke_detected" in data:
+            command["smoke_detected"] = bool(data["smoke_detected"])
     except (KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
 
