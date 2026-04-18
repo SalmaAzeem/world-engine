@@ -1,4 +1,6 @@
 from __future__ import annotations
+import asyncio
+import time
 
 import aiocoap
 import aiocoap.resource as resource
@@ -26,6 +28,8 @@ class CoAPNode:
         self.site = resource.Site()
         self.telemetry_resource = TelemetryResource(room)
         self.context = None
+        self.running = False
+        self._sentinel_task = None
 
         self.site.add_resource(
             [self.room.coap_floor_segment, self.room.coap_room_segment, "telemetry"],
@@ -61,8 +65,41 @@ class CoAPNode:
             f"[CoAP] {self.room.room_id} listening on "
             f"{self.config['coap_bind_host']}:{self.room.coap_port}"
         )
+        
+        self.running = True
+        self._sentinel_task = asyncio.create_task(self._sentinel_monitor())
+
+    async def _sentinel_monitor(self):
+        last_smoke_state = False
+        while self.running:
+            if self.room.smoke_detected and not last_smoke_state:
+                last_smoke_state = True
+                print(f"[SENTINEL] {self.room.room_id} Smoke Detected! Firing CoAP CON to Gateway...")
+                try:
+                    payload = json.dumps({
+                        "room_id": self.room.room_id,
+                        "alert": "SMOKE_DETECTED",
+                        "timestamp": int(time.time()),
+                        "message_id": f"sentinel-{self.room.room_id}-{int(time.time())}"
+                    }).encode("utf-8")
+                    
+                    gateway_url = f"coap://gateway_f{self.room.floor_id:02d}:5683/sentinel"
+                    
+                    request = aiocoap.Message(code=aiocoap.POST, mtype=aiocoap.CON, payload=payload, uri=gateway_url)
+                    response = await self.context.request(request).response
+                    print(f"[SENTINEL ACK] {self.room.room_id} received ACK from Gateway: {response.code}")
+                except Exception as e:
+                    print(f"[SENTINEL ERR] {self.room.room_id} failed to reach gateway: {e}")
+            elif not self.room.smoke_detected and last_smoke_state:
+                last_smoke_state = False
+                
+            await asyncio.sleep(1)
 
     async def stop(self):
+        self.running = False
+        if self._sentinel_task:
+            self._sentinel_task.cancel()
+            
         if self.context is not None:
             await self.context.shutdown()
 
