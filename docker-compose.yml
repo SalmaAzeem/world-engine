@@ -7,7 +7,6 @@ x-gateway-template: &gateway-template
     - iot_net
   restart: unless-stopped
   depends_on:
-    - engine
     - hivemq
   environment:
     BUILDING_ID: "01"
@@ -17,7 +16,7 @@ x-gateway-template: &gateway-template
 
 services:
   hivemq:
-    image: hivemq/hivemq-ce:latest
+    image: hivemq/hivemq4:latest
     container_name: hivemq-hub
     ports:
       - "1883:1883"
@@ -46,7 +45,6 @@ services:
     depends_on:
       - hivemq
 
- 
   engine:
     build: .
     container_name: world-engine
@@ -56,6 +54,16 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on:
       - hivemq
+      - gateway_f01
+      - gateway_f02
+      - gateway_f03
+      - gateway_f04
+      - gateway_f05
+      - gateway_f06
+      - gateway_f07
+      - gateway_f08
+      - gateway_f09
+      - gateway_f10
     networks:
       - iot_net
     restart: unless-stopped
@@ -73,7 +81,7 @@ services:
     networks:
       - iot_net
     restart: unless-stopped
-  
+
   gateway_f01:
     <<: *gateway-template
     container_name: gateway_f01
