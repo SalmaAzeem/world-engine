@@ -15,9 +15,11 @@ with open(BASE_DIR / "security_keys.json", "r") as f:
 
 class MQTTNode:
     def __init__(self, room, config, health_monitor):
+        from collections import OrderedDict
         self.room = room
         self.config = config
         self.health_monitor = health_monitor
+        self.processed_commands = OrderedDict()
         self.client = Client(
             self._client_id(),
             will_message=Message(
@@ -74,7 +76,12 @@ class MQTTNode:
     def _on_connect(self, client, flags, rc, properties):
         self.health_monitor.record_heartbeat(self.room.room_id, self.room.protocol)
         self.health_monitor.set_status(self.room.room_id, "ONLINE")
-        client.subscribe(self.room.command_topic, qos=self.config["mqtt_command_qos"])
+        
+        command_qos = self.config.get("mqtt_command_qos", 2)
+        if command_qos < 2:
+            print(f"[SECURITY WARNING] {self.room.room_id} subscribing to commands below QoS 2. Emergency Lockout risks race conditions!")
+            
+        client.subscribe(self.room.command_topic, qos=command_qos)
         client.publish(
             self.room.status_topic,
             self.room.status_payload("ONLINE"),
@@ -95,6 +102,17 @@ class MQTTNode:
         if command is None:
             print(f"[MQTT] Ignored malformed command for {self.room.room_id}")
             return
+
+        # DUP Flag & Idempotency Handler:
+        # Prevent "brand-new events" from retransmitted network-lagged packets.
+        message_id = command.get("message_id")
+        if message_id:
+            if message_id in self.processed_commands:
+                print(f"[MQTT DUP CAUGHT] Dropping duplicate command {message_id} on {self.room.room_id}")
+                return
+            self.processed_commands[message_id] = True
+            if len(self.processed_commands) > 100:
+                self.processed_commands.popitem(last=False)
 
         self.room.apply_command(command)
         self.health_monitor.record_heartbeat(self.room.room_id, self.room.protocol)
