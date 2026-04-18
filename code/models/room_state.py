@@ -24,6 +24,8 @@ class RoomState:
     lighting_dimmer: int = 0
     coap_host: str | None = None
     coap_port: int | None = None
+    emergency_lockout: bool = False
+    smoke_detected: bool = False
 
     def __post_init__(self):
         self.last_update = int(time.time())
@@ -97,11 +99,13 @@ class RoomState:
                 "humidity": round(self.humidity, 2),
                 "occupancy": self.occupancy,
                 "light_level": self.light_level,
+                "smoke_detected": self.smoke_detected,
             },
             "actuators": {
                 "hvac_mode": self.hvac_mode,
                 "target_temp": round(self.target_temp, 2),
                 "lighting_dimmer": self.lighting_dimmer,
+                "emergency_lockout": self.emergency_lockout,
             },
         }
 
@@ -115,18 +119,30 @@ class RoomState:
                 "hvac_mode": self.hvac_mode,
                 "target_temp": round(self.target_temp, 2),
                 "lighting_dimmer": self.lighting_dimmer,
+                "emergency_lockout": self.emergency_lockout,
             },
         }
 
     def apply_command(self, command):
-        if "hvac_mode" in command:
-            self.hvac_mode = command["hvac_mode"]
+        if "emergency_lockout" in command:
+            self.emergency_lockout = bool(command["emergency_lockout"])
+            if self.emergency_lockout:
+                self.hvac_mode = "OFF"
+                self.lighting_dimmer = 100
+                self.target_temp = 20.0
 
-        if "target_temp" in command:
-            self.target_temp = float(command["target_temp"])
+        if not self.emergency_lockout:
+            if "hvac_mode" in command:
+                self.hvac_mode = command["hvac_mode"]
 
-        if "lighting_dimmer" in command:
-            self.lighting_dimmer = clamp(int(command["lighting_dimmer"]), 0, 100)
+            if "target_temp" in command:
+                self.target_temp = float(command["target_temp"])
+
+            if "lighting_dimmer" in command:
+                self.lighting_dimmer = clamp(int(command["lighting_dimmer"]), 0, 100)
+
+        if "smoke_detected" in command:
+            self.smoke_detected = bool(command["smoke_detected"])
 
         self.last_update = int(time.time())
 
@@ -137,6 +153,10 @@ class RoomState:
         self._update_temperature(outside_temp, config)
         self._update_humidity(simulated_time)
         self._update_light_level(config)
+
+        import random
+        if random.random() < 0.0001:
+            self.smoke_detected = True
 
         now = time.time()
         self.last_update = int(simulated_time)
