@@ -103,8 +103,7 @@ class MQTTNode:
             print(f"[MQTT] Ignored malformed command for {self.room.room_id}")
             return
 
-        # DUP Flag & Idempotency Handler:
-        # Prevent "brand-new events" from retransmitted network-lagged packets.
+        # DUP flag & idempotency handler
         message_id = command.get("message_id")
         if message_id:
             if message_id in self.processed_commands:
