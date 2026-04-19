@@ -24,7 +24,8 @@
         "y": 360,
         "wires": [
             [
-                "6bf0b6b20f1bad94"
+                "6bf0b6b20f1bad94",
+                "3440c2a0a2242484"
             ]
         ]
     },
@@ -44,7 +45,8 @@
         "y": 280,
         "wires": [
             [
-                "0fc8bd3f0608403c"
+                "0fc8bd3f0608403c",
+                "ada47216574a6c1b"
             ]
         ]
     },
@@ -86,7 +88,7 @@
         "repeat": "",
         "crontab": "",
         "once": true,
-        "onceDelay": "2",
+        "onceDelay": "30",
         "topic": "",
         "payload": "",
         "payloadType": "date",
@@ -135,7 +137,8 @@
         "y": 100,
         "wires": [
             [
-                "2054e634f25e13e8"
+                "2054e634f25e13e8",
+                "fb16cf6b6758f8ec"
             ]
         ]
     },
@@ -144,7 +147,7 @@
         "type": "function",
         "z": "8f9b1e8e42cf78a6",
         "name": "mqtt translate",
-        "func": "let payload = JSON.parse(msg.payload.toString());\nconst floor_str = env.get(\"FLOOR_ID\").toString().padStart(2, '0');\n\n// Use metadata from engine to build topic\nmsg.topic = `campus/b01/f${floor_str}/r${payload.metadata.room}/telemetry`;\n\n// Add flag to identify gateway conversion\npayload.metadata.via_gateway = true;\n\n// Preserve full engine payload structure\nmsg.payload = payload;\n\nreturn msg;",
+        "func": "let raw_data = typeof msg.payload === \"object\" ? msg.payload : JSON.parse(msg.payload.toString());\nconst floor_str = env.get(\"FLOOR_ID\").toString().padStart(2, '0');\nconst room_num = raw_data.metadata.room;\n\nmsg.topic = `campus/b01/f${floor_str}/r${room_num}/telemetry`;\n\nmsg.payload = {\n    temperature: raw_data.sensors.temperature,\n    humidity: raw_data.sensors.humidity,\n    occupancy: raw_data.sensors.occupancy\n};\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -156,7 +159,7 @@
         "wires": [
             [
                 "59fd5a883ec55558",
-                "cee2a852a3c5d418"
+                "305409509bf0614a"
             ]
         ]
     },
@@ -173,7 +176,7 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "50cdfda11cc895d5",
+        "broker": "1186826570dc68e4",
         "x": 1110,
         "y": 260,
         "wires": []
@@ -241,7 +244,8 @@
         "y": 160,
         "wires": [
             [
-                "cee2a852a3c5d418"
+                "cee2a852a3c5d418",
+                "254b1a625369f104"
             ]
         ]
     },
@@ -264,6 +268,74 @@
                 "305409509bf0614a"
             ]
         ]
+    },
+    {
+        "id": "3440c2a0a2242484",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "ada47216574a6c1b",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "fb16cf6b6758f8ec",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "254b1a625369f104",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 200,
+        "wires": []
     },
     {
         "id": "1186826570dc68e4",
@@ -297,42 +369,49 @@
         "sessionExpiry": ""
     },
     {
-        "id": "50cdfda11cc895d5",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "hivemq",
-        "port": 1883,
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": 4,
-        "keepalive": 60,
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "17587b3071ce73e7",
+        "id": "0b8378e7057112ae",
         "type": "global-config",
         "env": [],
         "modules": {
             "node-red-contrib-coap": "0.8.0"
         }
+    },
+    {
+        "id": "verify_mqtt_in",
+        "type": "mqtt in",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "Verify MQTT Publish",
+        "topic": "campus/b01/+/+/telemetry",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1186826570dc68e4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 820,
+        "y": 440,
+        "wires": [
+            [
+                "verify_debug"
+            ]
+        ]
+    },
+    {
+        "id": "verify_debug",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "Successfully Published!",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1050,
+        "y": 440,
+        "wires": []
     }
 ]

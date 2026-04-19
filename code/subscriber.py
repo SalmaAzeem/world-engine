@@ -25,7 +25,13 @@ async def main():
     ssl_context.check_hostname = False
     ssl_context.verify_mode = ssl.CERT_NONE
 
-    await client.connect(config["mqtt_broker"], port=config.get("mqtt_tls_port", 8883), ssl=ssl_context)
+    while True:
+        try:
+            await client.connect(config["mqtt_broker"], port=config.get("mqtt_tls_port", 8883), ssl=ssl_context)
+            break
+        except (ConnectionRefusedError, OSError) as e:
+            print(f" Broker not ready yet ({e}), retrying in 3 seconds...")
+            await asyncio.sleep(3)
 
     client.subscribe("campus/#")
 

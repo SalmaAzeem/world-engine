@@ -1,8 +1,9 @@
 version: "3.8"
 
 x-gateway-template: &gateway-template
-  image: nodered/node-red:latest
-  command: bash -c "npm install node-red-contrib-coap && npm start"
+  build:
+    context: .
+    dockerfile: Dockerfile.gateway
   networks:
     - iot_net
   restart: unless-stopped
@@ -16,7 +17,7 @@ x-gateway-template: &gateway-template
 
 services:
   hivemq:
-    image: hivemq/hivemq4:latest
+    image: hivemq/hivemq-ce:latest
     container_name: hivemq-hub
     ports:
       - "1883:1883"
@@ -55,15 +56,6 @@ services:
     depends_on:
       - hivemq
       - gateway_f01
-      - gateway_f02
-      - gateway_f03
-      - gateway_f04
-      - gateway_f05
-      - gateway_f06
-      - gateway_f07
-      - gateway_f08
-      - gateway_f09
-      - gateway_f10
     networks:
       - iot_net
     restart: unless-stopped

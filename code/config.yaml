@@ -1,6 +1,6 @@
 building_id: "01"
 
-floors: 10
+floors: 1
 rooms_per_floor: 20
 mqtt_rooms_per_floor: 10
 coap_rooms_per_floor: 10
@@ -13,12 +13,12 @@ mqtt_telemetry_qos: 1
 mqtt_status_qos: 1
 mqtt_command_qos: 2
 
-coap_bind_host: "127.0.0.1"
-coap_public_host: "127.0.0.1"
+coap_bind_host: "0.0.0.0"
+coap_public_host: "engine"
+coap_enable_dtls: false
 coap_base_port: 25000
 coap_server_transports:
-  - simple6
-  - simplesocketserver
+  - udp6
 
 outside_temp_day: 30.0
 outside_temp_night: 22.0
