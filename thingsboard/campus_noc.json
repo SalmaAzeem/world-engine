@@ -1096,7 +1096,7 @@
           "color": "rgba(0, 0, 0, 0.87)",
           "padding": "8px",
           "settings": {
-            "cardHtml": "<button onclick=\"publish()\">Toggle Heat</button>\r\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js\"></script>\r\n<script>\r\nfunction publish() {\r\n    var client = mqtt.connect('ws://test.mosquitto.org:8081');\r\n    client.on('connect', function() {\r\n        client.publish('campus/F10/R1110/cmd', \r\n            JSON.stringify({method: \"toggle_heat\", params: true}));\r\n        client.end();\r\n    });\r\n}\r\n</script>",
+            "cardHtml": "<button onclick=\"publish()\">Toggle Heat</button>\r\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js\"></script>\r\n<script>\r\nfunction publish() {\r\n    var client = mqtt.connect('ws://hivemq:1883');\r\n    client.on('connect', function() {\r\n        client.publish('campus/F10/R1110/cmd', \r\n            JSON.stringify({method: \"toggle_heat\", params: true}));\r\n        client.end();\r\n    });\r\n}\r\n</script>",
             "cardCss": ".card {\n    font-weight: bold;\n    font-size: 32px;\n    color: #999;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}"
           },
           "title": "HTML Card",
@@ -1221,16 +1221,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "5232fcb0-3848-11f1-8ffb-c16432e38b4d",
-            "52bb3f80-3848-11f1-8ffb-c16432e38b4d",
-            "52d0ea60-3848-11f1-8ffb-c16432e38b4d",
-            "52decd10-3848-11f1-8ffb-c16432e38b4d",
-            "52f08050-3848-11f1-8ffb-c16432e38b4d",
-            "5304f2b0-3848-11f1-8ffb-c16432e38b4d",
-            "531a0150-3848-11f1-8ffb-c16432e38b4d",
-            "532c77e0-3848-11f1-8ffb-c16432e38b4d",
-            "5338d3f0-3848-11f1-8ffb-c16432e38b4d",
-            "534445a0-3848-11f1-8ffb-c16432e38b4d"
+            "51b16b20-3c2e-11f1-b309-79b7625ff7f3",
+            "51c6a0d0-3c2e-11f1-b309-79b7625ff7f3",
+            "51d34b00-3c2e-11f1-b309-79b7625ff7f3",
+            "51df31e0-3c2e-11f1-b309-79b7625ff7f3",
+            "51ed62b0-3c2e-11f1-b309-79b7625ff7f3",
+            "51f92280-3c2e-11f1-b309-79b7625ff7f3",
+            "520382c0-3c2e-11f1-b309-79b7625ff7f3",
+            "520e0a10-3c2e-11f1-b309-79b7625ff7f3",
+            "52184340-3c2e-11f1-b309-79b7625ff7f3",
+            "52227c70-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1242,16 +1242,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "53b57e00-3848-11f1-8ffb-c16432e38b4d",
-            "53c02c60-3848-11f1-8ffb-c16432e38b4d",
-            "53cb28e0-3848-11f1-8ffb-c16432e38b4d",
-            "53d477b0-3848-11f1-8ffb-c16432e38b4d",
-            "53dded90-3848-11f1-8ffb-c16432e38b4d",
-            "53e7d8a0-3848-11f1-8ffb-c16432e38b4d",
-            "53910610-3848-11f1-8ffb-c16432e38b4d",
-            "53fbd5d0-3848-11f1-8ffb-c16432e38b4d",
-            "5405c0e0-3848-11f1-8ffb-c16432e38b4d",
-            "540db020-3848-11f1-8ffb-c16432e38b4d"
+            "52877fd0-3c2e-11f1-b309-79b7625ff7f3",
+            "5290a790-3c2e-11f1-b309-79b7625ff7f3",
+            "529b7d00-3c2e-11f1-b309-79b7625ff7f3",
+            "52a47db0-3c2e-11f1-b309-79b7625ff7f3",
+            "52acbb10-3c2e-11f1-b309-79b7625ff7f3",
+            "52ba0180-3c2e-11f1-b309-79b7625ff7f3",
+            "52c57330-3c2e-11f1-b309-79b7625ff7f3",
+            "52d0bdd0-3c2e-11f1-b309-79b7625ff7f3",
+            "52d8ad10-3c2e-11f1-b309-79b7625ff7f3",
+            "52e00010-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1263,16 +1263,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "5470dec0-3848-11f1-8ffb-c16432e38b4d",
-            "547a7bb0-3848-11f1-8ffb-c16432e38b4d",
-            "548418a0-3848-11f1-8ffb-c16432e38b4d",
-            "548e2ac0-3848-11f1-8ffb-c16432e38b4d",
-            "549c0d70-3848-11f1-8ffb-c16432e38b4d",
-            "54a4e710-3848-11f1-8ffb-c16432e38b4d",
-            "54ad99a0-3848-11f1-8ffb-c16432e38b4d",
-            "54b588e0-3848-11f1-8ffb-c16432e38b4d",
-            "54bed7b0-3848-11f1-8ffb-c16432e38b4d",
-            "54c7b150-3848-11f1-8ffb-c16432e38b4d"
+            "53359a20-3c2e-11f1-b309-79b7625ff7f3",
+            "533c9f00-3c2e-11f1-b309-79b7625ff7f3",
+            "5343caf0-3c2e-11f1-b309-79b7625ff7f3",
+            "534af6e0-3c2e-11f1-b309-79b7625ff7f3",
+            "535249e0-3c2e-11f1-b309-79b7625ff7f3",
+            "53599ce0-3c2e-11f1-b309-79b7625ff7f3",
+            "536053a0-3c2e-11f1-b309-79b7625ff7f3",
+            "5367cdb0-3c2e-11f1-b309-79b7625ff7f3",
+            "536e3650-3c2e-11f1-b309-79b7625ff7f3",
+            "537477e0-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1284,16 +1284,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "55496470-3848-11f1-8ffb-c16432e38b4d",
-            "55539da0-3848-11f1-8ffb-c16432e38b4d",
-            "55610b20-3848-11f1-8ffb-c16432e38b4d",
-            "556b4450-3848-11f1-8ffb-c16432e38b4d",
-            "55768ef0-3848-11f1-8ffb-c16432e38b4d",
-            "5580c820-3848-11f1-8ffb-c16432e38b4d",
-            "558cfd20-3848-11f1-8ffb-c16432e38b4d",
-            "559ab8c0-3848-11f1-8ffb-c16432e38b4d",
-            "55a7d820-3848-11f1-8ffb-c16432e38b4d",
-            "55b1c330-3848-11f1-8ffb-c16432e38b4d"
+            "53d07a90-3c2e-11f1-b309-79b7625ff7f3",
+            "53db5000-3c2e-11f1-b309-79b7625ff7f3",
+            "53e64c80-3c2e-11f1-b309-79b7625ff7f3",
+            "53ef7440-3c2e-11f1-b309-79b7625ff7f3",
+            "53f91130-3c2e-11f1-b309-79b7625ff7f3",
+            "54034a60-3c2e-11f1-b309-79b7625ff7f3",
+            "540c9930-3c2e-11f1-b309-79b7625ff7f3",
+            "54165d30-3c2e-11f1-b309-79b7625ff7f3",
+            "54209660-3c2e-11f1-b309-79b7625ff7f3",
+            "542aa880-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1305,16 +1305,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "5642dfa0-3848-11f1-8ffb-c16432e38b4d",
-            "564d8e00-3848-11f1-8ffb-c16432e38b4d",
-            "5656b5c0-3848-11f1-8ffb-c16432e38b4d",
-            "56602ba0-3848-11f1-8ffb-c16432e38b4d",
-            "5669efa0-3848-11f1-8ffb-c16432e38b4d",
-            "5673dab0-3848-11f1-8ffb-c16432e38b4d",
-            "567cdb60-3848-11f1-8ffb-c16432e38b4d",
-            "56860320-3848-11f1-8ffb-c16432e38b4d",
-            "5690b180-3848-11f1-8ffb-c16432e38b4d",
-            "569a2760-3848-11f1-8ffb-c16432e38b4d"
+            "548f36b0-3c2e-11f1-b309-79b7625ff7f3",
+            "549725f0-3c2e-11f1-b309-79b7625ff7f3",
+            "549eee20-3c2e-11f1-b309-79b7625ff7f3",
+            "54a75290-3c2e-11f1-b309-79b7625ff7f3",
+            "54af41d0-3c2e-11f1-b309-79b7625ff7f3",
+            "54b6e2f0-3c2e-11f1-b309-79b7625ff7f3",
+            "54bdc0c0-3c2e-11f1-b309-79b7625ff7f3",
+            "54c588f0-3c2e-11f1-b309-79b7625ff7f3",
+            "54cc3fb0-3c2e-11f1-b309-79b7625ff7f3",
+            "54d34490-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1326,16 +1326,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "5721a6e0-3848-11f1-8ffb-c16432e38b4d",
-            "572920f0-3848-11f1-8ffb-c16432e38b4d",
-            "572ffec0-3848-11f1-8ffb-c16432e38b4d",
-            "573751c0-3848-11f1-8ffb-c16432e38b4d",
-            "573e2f90-3848-11f1-8ffb-c16432e38b4d",
-            "57455b80-3848-11f1-8ffb-c16432e38b4d",
-            "574cfca0-3848-11f1-8ffb-c16432e38b4d",
-            "57542890-3848-11f1-8ffb-c16432e38b4d",
-            "575b2d70-3848-11f1-8ffb-c16432e38b4d",
-            "57625960-3848-11f1-8ffb-c16432e38b4d"
+            "551f1aa0-3c2e-11f1-b309-79b7625ff7f3",
+            "55266da0-3c2e-11f1-b309-79b7625ff7f3",
+            "552caf30-3c2e-11f1-b309-79b7625ff7f3",
+            "553317d0-3c2e-11f1-b309-79b7625ff7f3",
+            "5539a780-3c2e-11f1-b309-79b7625ff7f3",
+            "553fe910-3c2e-11f1-b309-79b7625ff7f3",
+            "55462aa0-3c2e-11f1-b309-79b7625ff7f3",
+            "554c4520-3c2e-11f1-b309-79b7625ff7f3",
+            "555322f0-3c2e-11f1-b309-79b7625ff7f3",
+            "555c23a0-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1347,16 +1347,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "57ccdb00-3848-11f1-8ffb-c16432e38b4d",
-            "57d53f70-3848-11f1-8ffb-c16432e38b4d",
-            "57dda3e0-3848-11f1-8ffb-c16432e38b4d",
-            "57e4a8c0-3848-11f1-8ffb-c16432e38b4d",
-            "57ec49e0-3848-11f1-8ffb-c16432e38b4d",
-            "57f5e6d0-3848-11f1-8ffb-c16432e38b4d",
-            "57fd39d0-3848-11f1-8ffb-c16432e38b4d",
-            "58050200-3848-11f1-8ffb-c16432e38b4d",
-            "580cca30-3848-11f1-8ffb-c16432e38b4d",
-            "5814e080-3848-11f1-8ffb-c16432e38b4d"
+            "55a3db00-3c2e-11f1-b309-79b7625ff7f3",
+            "55a9f580-3c2e-11f1-b309-79b7625ff7f3",
+            "55b14880-3c2e-11f1-b309-79b7625ff7f3",
+            "55b714e0-3c2e-11f1-b309-79b7625ff7f3",
+            "55bce140-3c2e-11f1-b309-79b7625ff7f3",
+            "55c2fbc0-3c2e-11f1-b309-79b7625ff7f3",
+            "55c98b70-3c2e-11f1-b309-79b7625ff7f3",
+            "55d04230-3c2e-11f1-b309-79b7625ff7f3",
+            "55d683c0-3c2e-11f1-b309-79b7625ff7f3",
+            "55dbdaf0-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1368,16 +1368,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "5880e8c0-3848-11f1-8ffb-c16432e38b4d",
-            "588ad3d0-3848-11f1-8ffb-c16432e38b4d",
-            "58955b20-3848-11f1-8ffb-c16432e38b4d",
-            "58a49d60-3848-11f1-8ffb-c16432e38b4d",
-            "58ad01d0-3848-11f1-8ffb-c16432e38b4d",
-            "58b53f30-3848-11f1-8ffb-c16432e38b4d",
-            "58bcb940-3848-11f1-8ffb-c16432e38b4d",
-            "58c48170-3848-11f1-8ffb-c16432e38b4d",
-            "58cd8220-3848-11f1-8ffb-c16432e38b4d",
-            "58d60da0-3848-11f1-8ffb-c16432e38b4d"
+            "56282630-3c2e-11f1-b309-79b7625ff7f3",
+            "562f5220-3c2e-11f1-b309-79b7625ff7f3",
+            "5635e1d0-3c2e-11f1-b309-79b7625ff7f3",
+            "563bfc50-3c2e-11f1-b309-79b7625ff7f3",
+            "5642da20-3c2e-11f1-b309-79b7625ff7f3",
+            "564a7b40-3c2e-11f1-b309-79b7625ff7f3",
+            "5651ce40-3c2e-11f1-b309-79b7625ff7f3",
+            "56599670-3c2e-11f1-b309-79b7625ff7f3",
+            "56602620-3c2e-11f1-b309-79b7625ff7f3",
+            "56668ec0-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1389,16 +1389,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "593b5f20-3848-11f1-8ffb-c16432e38b4d",
-            "59439c80-3848-11f1-8ffb-c16432e38b4d",
-            "594d1260-3848-11f1-8ffb-c16432e38b4d",
-            "59559de0-3848-11f1-8ffb-c16432e38b4d",
-            "595e5070-3848-11f1-8ffb-c16432e38b4d",
-            "59681470-3848-11f1-8ffb-c16432e38b4d",
-            "59761e30-3848-11f1-8ffb-c16432e38b4d",
-            "597f1ee0-3848-11f1-8ffb-c16432e38b4d",
-            "598a1b60-3848-11f1-8ffb-c16432e38b4d",
-            "59953ef0-3848-11f1-8ffb-c16432e38b4d"
+            "56a91600-3c2e-11f1-b309-79b7625ff7f3",
+            "56b041f0-3c2e-11f1-b309-79b7625ff7f3",
+            "56b63560-3c2e-11f1-b309-79b7625ff7f3",
+            "56bc28d0-3c2e-11f1-b309-79b7625ff7f3",
+            "56c18000-3c2e-11f1-b309-79b7625ff7f3",
+            "56c74c60-3c2e-11f1-b309-79b7625ff7f3",
+            "56ccf1b0-3c2e-11f1-b309-79b7625ff7f3",
+            "56d2be10-3c2e-11f1-b309-79b7625ff7f3",
+            "56db97b0-3c2e-11f1-b309-79b7625ff7f3",
+            "56e2eab0-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       },
@@ -1410,16 +1410,16 @@
           "resolveMultiple": true,
           "entityType": "DEVICE",
           "entityList": [
-            "59fd0170-3848-11f1-8ffb-c16432e38b4d",
-            "5a053ed0-3848-11f1-8ffb-c16432e38b4d",
-            "5a0e3f80-3848-11f1-8ffb-c16432e38b4d",
-            "5a171920-3848-11f1-8ffb-c16432e38b4d",
-            "5a2019d0-3848-11f1-8ffb-c16432e38b4d",
-            "5a29ddd0-3848-11f1-8ffb-c16432e38b4d",
-            "5a394720-3848-11f1-8ffb-c16432e38b4d",
-            "5a466680-3848-11f1-8ffb-c16432e38b4d",
-            "5a51ff40-3848-11f1-8ffb-c16432e38b4d",
-            "5a5d49e0-3848-11f1-8ffb-c16432e38b4d"
+            "5733a2c0-3c2e-11f1-b309-79b7625ff7f3",
+            "573a5980-3c2e-11f1-b309-79b7625ff7f3",
+            "5741faa0-3c2e-11f1-b309-79b7625ff7f3",
+            "5747c700-3c2e-11f1-b309-79b7625ff7f3",
+            "574de180-3c2e-11f1-b309-79b7625ff7f3",
+            "5753d4f0-3c2e-11f1-b309-79b7625ff7f3",
+            "575a1680-3c2e-11f1-b309-79b7625ff7f3",
+            "57603100-3c2e-11f1-b309-79b7625ff7f3",
+            "57675cf0-3c2e-11f1-b309-79b7625ff7f3",
+            "576f7340-3c2e-11f1-b309-79b7625ff7f3"
           ]
         }
       }
