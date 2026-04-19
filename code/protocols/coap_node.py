@@ -46,9 +46,14 @@ class CoAPNode:
         )
 
     async def start(self):
+        bind_host = self.config["coap_bind_host"]
+        if bind_host == "0.0.0.0":
+            import socket
+            bind_host = socket.gethostbyname(socket.gethostname())
+
         self.context = await aiocoap.Context.create_server_context(
             self.site,
-            bind=(self.config["coap_bind_host"], self.room.coap_port),
+            bind=(bind_host, self.room.coap_port),
             transports=["tinydtls_server"] if self.config.get("coap_enable_dtls", True) else self.config.get("coap_server_transports"),
         )
         psk_hex = SECURITY_KEYS[self.room.room_id]["psk"]

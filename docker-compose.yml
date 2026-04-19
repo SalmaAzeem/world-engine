@@ -1,8 +1,9 @@
 version: "3.8"
 
 x-gateway-template: &gateway-template
-  image: nodered/node-red:latest
-  command: bash -c "npm install node-red-contrib-coap && npm start"
+  build:
+    context: .
+    dockerfile: Dockerfile.gateway
   networks:
     - iot_net
   restart: unless-stopped
