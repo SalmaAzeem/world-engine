@@ -1,43 +1,127 @@
-import csv
 import json
+import time
+import logging
 import paho.mqtt.client as mqtt
+import random
 
-tokens = {}
-with open('devices.csv', 'r') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        sensor_id = f"b01-f{int(row['floor']):02d}-r{row['room']}"
-        tokens[sensor_id] = row['token']
+HIVE_BROKER = "hivemq"  
+HIVE_PORT = 1883
+TB_BROKER = "thingsboard"
+TB_PORT = 1883           
+GATEWAY_TOKEN = "pf3piz4d4yb6ouxf68vc" 
 
-tb_clients = {}
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [%(levelname)s] %(message)s')
+logger = logging.getLogger("TB-BRIDGE")
 
-def get_tb_client(token):
-    if token not in tb_clients:
-        c = mqtt.Client()
-        c.username_pw_set(token)
-        c.connect("localhost", 1884, 60)  
-        c.loop_start()
-        tb_clients[token] = c
-    return tb_clients[token]
+hive_client = mqtt.Client(client_id=f"bridge-hive-{random.randint(1000, 9999)}")
+tb_client = mqtt.Client(client_id=f"bridge-tb-{random.randint(1000, 9999)}")
 
-def on_message(client, userdata, msg):
+def on_hive_connect(client, userdata, flags, rc):
+    if rc == 0:
+        logger.info("Connected to HiveMQ Broker")
+        client.subscribe("campus/+/+/+/telemetry")
+    else:
+        logger.error(f"Failed to connect to HiveMQ, code: {rc}")
+
+def on_tb_connect(client, userdata, flags, rc):
+    if rc == 0:
+        logger.info("Connected to ThingsBoard Gateway successfully")
+        client.subscribe("v1/gateway/rpc")
+    else:
+
+        logger.error(f"ThingsBoard Connection Refused! Code: {rc}")
+        if rc == 4:
+            logger.error("TIP: Ensure your device in ThingsBoard is marked as 'Is Gateway' and the token is correct.")
+
+def on_tb_disconnect(client, userdata, rc):
+    if rc != 0:
+        logger.warning(f"Unexpectedly disconnected from ThingsBoard (code {rc}). Retrying...")
+
+def on_tb_message(client, userdata, msg):
+    try:
+        data = json.loads(msg.payload)
+        device_name = data.get("device")
+        rpc_data = data.get("data", {})
+        method = rpc_data.get("method")
+        params = rpc_data.get("params")
+        request_id = data.get("id")
+
+        logger.info(f"Incoming RPC for {device_name}: {method}({params})")
+
+        parts = device_name.split("-")
+        floor = parts[1].replace("F", "").lower()
+        room = parts[2].replace("R", "").lower()
+        
+        hive_topic = f"campus/b01/f{floor}/r{room}/cmd"
+        command_payload = {
+            "action": method,
+            "value": params,
+            "message_id": f"tb-rpc-{request_id}-{int(time.time())}"
+        }
+        
+        hive_client.publish(hive_topic, json.dumps(command_payload), qos=1)
+        logger.info(f"Forwarded command to HiveMQ: {hive_topic}")
+
+    except Exception as e:
+        logger.error(f"Error handling TB RPC: {e}")
+
+def on_hive_message(client, userdata, msg):
     try:
         payload = json.loads(msg.payload)
-        if "metadata" in payload and "sensors" in payload:
-            sensor_id = payload["metadata"]["sensor_id"]
-            token = tokens.get(sensor_id)
-            
-            if token:
-                tb_client = get_tb_client(token)
-                tb_client.publish("v1/devices/me/telemetry", json.dumps(payload["sensors"]))
-                print(f"✅ Bridged data for {sensor_id} -> ThingsBoard")
-    except Exception:
-        pass
+        metadata = payload.get("metadata", {})
+        
+        protocol = metadata.get("protocol", "mqtt").upper()
+        floor = f"{metadata.get('floor', 0):02d}"
+        room = metadata.get("room", 0)
+        device_name = f"{protocol}-F{floor}-R{room}"
+        device_type = f"{protocol}-ThermalSensor"
 
-print("🚀 Starting HiveMQ -> ThingsBoard Bridge...")
+        ts = metadata.get("timestamp", time.time())
+        if ts < 10000000000: 
+            ts = int(ts * 1000)
+        else:
+            ts = int(ts)
+        
+        tb_payload = {
+            device_name: [
+                {
+                    "ts": ts,
+                    "values": {
+                        **payload.get("sensors", {}),
+                        **payload.get("actuators", {})
+                    }
+                }
+            ]
+        }
+        
+        tb_client.publish("v1/gateway/connect", json.dumps({"device": device_name, "type": device_type}))
+        tb_client.publish("v1/gateway/telemetry", json.dumps(tb_payload), qos=1)
+        logger.info(f"Bridged {device_name} (TS: {ts}) to ThingsBoard")
+    except Exception as e:
+        logger.error(f"Error bridging telemetry: {e}")
 
-hivemq_client = mqtt.Client()
-hivemq_client.on_message = on_message
-hivemq_client.connect("localhost", 18830, 60)  
-hivemq_client.subscribe("campus/#")
-hivemq_client.loop_forever()
+hive_client.on_connect = on_hive_connect
+hive_client.on_message = on_hive_message
+
+tb_client.on_connect = on_tb_connect
+tb_client.on_disconnect = on_tb_disconnect
+tb_client.on_message = on_tb_message
+tb_client.username_pw_set(GATEWAY_TOKEN)
+
+def run():
+    logger.info("Starting HiveMQ <-> ThingsBoard Gateway Bridge...")
+    
+    while True:
+        try:
+            hive_client.connect(HIVE_BROKER, HIVE_PORT, 60)
+            tb_client.connect(TB_BROKER, TB_PORT, 60)
+            break
+        except Exception as e:
+            logger.warning(f"Initial connection failed ({e}), retrying...")
+            time.sleep(5)
+
+    hive_client.loop_start()
+    tb_client.loop_forever()
+
+if __name__ == "__main__":
+    run()

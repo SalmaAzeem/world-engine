@@ -85,6 +85,17 @@ services:
       - iot_net
     restart: unless-stopped
 
+  tb-bridge:
+    build: .
+    container_name: tb-bridge
+    command: [ "python", "tb_bridge.py" ]
+    depends_on:
+      - hivemq
+      - thingsboard
+    networks:
+      - iot_net
+    restart: unless-stopped
+
   gateway_f01:
     <<: *gateway-template
     container_name: gateway_f01

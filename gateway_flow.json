@@ -294,9 +294,9 @@
         "type": "debug",
         "z": "243020977b743f2f",
         "name": "Successfully Published!",
-        "active": true,
+        "active": false,
         "tosidebar": true,
-        "console": true,
+        "console": false,
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
@@ -311,9 +311,9 @@
         "type": "debug",
         "z": "243020977b743f2f",
         "name": "Cmd Flow Output",
-        "active": true,
+        "active": false,
         "tosidebar": true,
-        "console": true,
+        "console": false,
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
@@ -328,9 +328,9 @@
         "type": "debug",
         "z": "243020977b743f2f",
         "name": "Translated MQTT Payload",
-        "active": true,
+        "active": false,
         "tosidebar": true,
-        "console": true,
+        "console": false,
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
@@ -345,9 +345,9 @@
         "type": "debug",
         "z": "243020977b743f2f",
         "name": "Incoming CMD",
-        "active": true,
+        "active": false,
         "tosidebar": true,
-        "console": true,
+        "console": false,
         "tostatus": false,
         "complete": "true",
         "targetType": "full",
@@ -395,5 +395,61 @@
         "modules": {
             "node-red-contrib-coap": "0.8.0"
         }
+    },
+    {
+        "id": "coap_server_config",
+        "type": "coap-server",
+        "name": "Gateway CoAP Server",
+        "port": "5683",
+        "ipv4": true,
+        "ipv6": false
+    },
+    {
+        "id": "coap_sentinel_in",
+        "type": "coap in",
+        "z": "243020977b743f2f",
+        "name": "Sentinel Listener",
+        "method": "POST",
+        "url": "/sentinel",
+        "server": "coap_server_config",
+        "x": 130,
+        "y": 540,
+        "wires": [
+            [
+                "sentinel_transformer"
+            ]
+        ]
+    },
+    {
+        "id": "sentinel_transformer",
+        "type": "function",
+        "z": "243020977b743f2f",
+        "name": "sentinel transformer",
+        "func": "let raw_data = JSON.parse(msg.payload.toString());\nlet room_id = raw_data.room_id;\nlet floor = room_id.split(\"-\")[1].replace(\"f\", \"\");\nlet room = room_id.split(\"-\")[2].replace(\"r\", \"\");\n\nmsg.topic = `campus/b01/f${floor}/r${room}/telemetry`;\nmsg.payload = {\n    smoke_detected: true,\n    event: \"SMOKE_ALERT\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 540,
+        "wires": [
+            [
+                "8d879199a23d4f58",
+                "coap_sentinel_res"
+            ]
+        ]
+    },
+    {
+        "id": "coap_sentinel_res",
+        "type": "coap response",
+        "z": "243020977b743f2f",
+        "name": "Sentinel ACK",
+        "statusCode": "2.04",
+        "contentFormat": "text/plain",
+        "x": 550,
+        "y": 580,
+        "wires": []
     }
 ]

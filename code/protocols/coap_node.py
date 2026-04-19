@@ -91,11 +91,12 @@ class CoAPNode:
                     
                     gateway_url = f"coap://gateway_f{self.room.floor_id:02d}:5683/sentinel"
                     
-                    client_context = await aiocoap.Context.create_client_context()
-                    request = aiocoap.Message(code=aiocoap.POST, mtype=aiocoap.CON, payload=payload, uri=gateway_url)
-                    response = await client_context.request(request).response
-                    print(f"[SENTINEL ACK] {self.room.room_id} received ACK from Gateway: {response.code}")
-                    await client_context.shutdown()
+                    if self.context:
+                        request = aiocoap.Message(code=aiocoap.POST, mtype=aiocoap.CON, payload=payload, uri=gateway_url)
+                        response = await self.context.request(request).response
+                        print(f"[SENTINEL ACK] {self.room.room_id} received ACK from Gateway: {response.code}")
+                    else:
+                        print(f"[SENTINEL ERR] {self.room.room_id} context not ready")
                 except Exception as e:
                     print(f"[SENTINEL ERR] {self.room.room_id} failed to reach gateway: {e}")
             elif not self.room.smoke_detected and last_smoke_state:
