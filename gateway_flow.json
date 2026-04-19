@@ -25,7 +25,8 @@
         "wires": [
             [
                 "6bf0b6b20f1bad94",
-                "3440c2a0a2242484"
+                "3440c2a0a2242484",
+                "debug_cmd"
             ]
         ]
     },
@@ -137,8 +138,7 @@
         "y": 100,
         "wires": [
             [
-                "2054e634f25e13e8",
-                "fb16cf6b6758f8ec"
+                "2054e634f25e13e8"
             ]
         ]
     },
@@ -159,7 +159,8 @@
         "wires": [
             [
                 "59fd5a883ec55558",
-                "305409509bf0614a"
+                "305409509bf0614a",
+                "translated_mqtt_debug"
             ]
         ]
     },
@@ -265,7 +266,8 @@
         "y": 400,
         "wires": [
             [
-                "305409509bf0614a"
+                "305409509bf0614a",
+                "cmd_debug"
             ]
         ]
     },
@@ -301,23 +303,6 @@
         "statusType": "auto",
         "x": 570,
         "y": 220,
-        "wires": []
-    },
-    {
-        "id": "fb16cf6b6758f8ec",
-        "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "debug 5",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 40,
         "wires": []
     },
     {
@@ -412,6 +397,57 @@
         "statusType": "auto",
         "x": 1050,
         "y": 440,
+        "wires": []
+    },
+    {
+        "id": "cmd_debug",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "Cmd Flow Output",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "translated_mqtt_debug",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "Translated MQTT Payload",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 50,
+        "wires": []
+    },
+    {
+        "id": "debug_cmd",
+        "type": "debug",
+        "z": "8f9b1e8e42cf78a6",
+        "name": "Incoming CMD",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 320,
         "wires": []
     }
 ]
