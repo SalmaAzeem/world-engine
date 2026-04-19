@@ -1,6 +1,6 @@
 [
     {
-        "id": "8f9b1e8e42cf78a6",
+        "id": "243020977b743f2f",
         "type": "tab",
         "label": "Flow 1",
         "disabled": false,
@@ -8,9 +8,9 @@
         "env": []
     },
     {
-        "id": "e687eff6af2441c4",
+        "id": "c3681a753043f36d",
         "type": "mqtt in",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "",
         "topic": "campus/+/+/+/cmd",
         "qos": "2",
@@ -24,16 +24,15 @@
         "y": 360,
         "wires": [
             [
-                "6bf0b6b20f1bad94",
-                "3440c2a0a2242484",
-                "debug_cmd"
+                "3e2d9c5dd3751e33",
+                "73a3306823744ee2"
             ]
         ]
     },
     {
-        "id": "6bf0b6b20f1bad94",
+        "id": "3e2d9c5dd3751e33",
         "type": "function",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "command router",
         "func": "let parts = msg.topic.split(\"/\");\nlet floor = parseInt(parts[2].replace(\"f\", \"\"));\nlet room_num = parseInt(parts[3].replace(\"r\", \"\"));\n\nif (floor !== parseInt(env.get(\"FLOOR_ID\"))) return null;\n\nlet slot = room_num - (floor * 100);\n\nif (slot > 10) {\n    const engine_host = env.get(\"ENGINE_HOST\") || \"engine\";\n    let port_offset = ((floor - 1) * 10) + (slot - 11);\n    let port = 25000 + port_offset;\n\n    let command_data = JSON.parse(msg.payload);\n    let actuator = command_data.target || \"hvac\";\n    \n    msg.url = `coap://${engine_host}:${port}/f${parts[2]}/r${room_num}/actuators/${actuator}`;\n    msg.method = \"PUT\";\n    \n    msg.confirmable = true; \n    msg.payload = command_data.state;\n    \n    msg.responseTopic = `campus/b01/f${parts[2]}/r${room_num}/response`;\n    \n    return msg;\n}\nreturn null;",
         "outputs": 1,
@@ -46,15 +45,14 @@
         "y": 280,
         "wires": [
             [
-                "0fc8bd3f0608403c",
-                "ada47216574a6c1b"
+                "c706144f716131ba"
             ]
         ]
     },
     {
-        "id": "0fc8bd3f0608403c",
+        "id": "c706144f716131ba",
         "type": "coap request",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "method": "GET",
         "confirmable": true,
         "observe": false,
@@ -68,14 +66,14 @@
         "y": 320,
         "wires": [
             [
-                "917085cb33baa342"
+                "4404695e205cdd57"
             ]
         ]
     },
     {
-        "id": "ab4e07ef3ab3afa2",
+        "id": "57d7e91618b23592",
         "type": "inject",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "",
         "props": [
             {
@@ -97,14 +95,14 @@
         "y": 100,
         "wires": [
             [
-                "a1526858668bf32f"
+                "91f93f4b647c7fa1"
             ]
         ]
     },
     {
-        "id": "a1526858668bf32f",
+        "id": "91f93f4b647c7fa1",
         "type": "function",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "init observers",
         "func": "const floor = parseInt(env.get(\"FLOOR_ID\"));\nconst engine_host = env.get(\"ENGINE_HOST\") || \"engine\";\nconst floor_str = floor.toString().padStart(2, '0');\n\nlet messages = [];\n\nfor (let i = 0; i < 10; i++) {\n    let slot = 11 + i;\n    let room_num = (floor * 100) + slot;\n\n    let port = 25000 + ((floor - 1) * 10) + i;\n\n    messages.push({\n        payload: \"\",\n        url: `coap://${engine_host}:${port}/f${floor_str}/r${room_num}/telemetry`,\n        method: \"OBSERVE\"\n    });\n}\n\nreturn [messages];",
         "outputs": 1,
@@ -117,14 +115,14 @@
         "y": 100,
         "wires": [
             [
-                "71535341476c25a0"
+                "01abfd09b9e4b12a"
             ]
         ]
     },
     {
-        "id": "71535341476c25a0",
+        "id": "01abfd09b9e4b12a",
         "type": "coap request",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "method": "GET",
         "confirmable": true,
         "observe": false,
@@ -138,14 +136,14 @@
         "y": 100,
         "wires": [
             [
-                "2054e634f25e13e8"
+                "fa315b716a30e4e8"
             ]
         ]
     },
     {
-        "id": "2054e634f25e13e8",
+        "id": "fa315b716a30e4e8",
         "type": "function",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "mqtt translate",
         "func": "let raw_data = typeof msg.payload === \"object\" ? msg.payload : JSON.parse(msg.payload.toString());\nconst floor_str = env.get(\"FLOOR_ID\").toString().padStart(2, '0');\nconst room_num = raw_data.metadata.room;\n\nmsg.topic = `campus/b01/f${floor_str}/r${room_num}/telemetry`;\n\nmsg.payload = {\n    temperature: raw_data.sensors.temperature,\n    humidity: raw_data.sensors.humidity,\n    occupancy: raw_data.sensors.occupancy\n};\n\nreturn msg;",
         "outputs": 1,
@@ -158,16 +156,16 @@
         "y": 100,
         "wires": [
             [
-                "59fd5a883ec55558",
-                "305409509bf0614a",
-                "translated_mqtt_debug"
+                "8fc3a2c51448b4ad",
+                "8d879199a23d4f58",
+                "3e07e9404bdb4808"
             ]
         ]
     },
     {
-        "id": "cee2a852a3c5d418",
+        "id": "7948595bc866d3be",
         "type": "mqtt out",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "",
         "topic": "",
         "qos": "",
@@ -183,9 +181,9 @@
         "wires": []
     },
     {
-        "id": "305409509bf0614a",
+        "id": "8d879199a23d4f58",
         "type": "mqtt out",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "",
         "topic": "",
         "qos": "",
@@ -201,9 +199,9 @@
         "wires": []
     },
     {
-        "id": "59fd5a883ec55558",
+        "id": "8fc3a2c51448b4ad",
         "type": "join",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "60s edge thinning",
         "mode": "custom",
         "build": "array",
@@ -225,14 +223,14 @@
         "y": 200,
         "wires": [
             [
-                "57e01e3d5cd3d034"
+                "1b86596fa5a19a7d"
             ]
         ]
     },
     {
-        "id": "57e01e3d5cd3d034",
+        "id": "1b86596fa5a19a7d",
         "type": "function",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "function 19",
         "func": "let sum = 0;\nlet count = msg.payload.length;\n\nmsg.payload.forEach(reading => {\n    sum += reading.temperature;\n})\n\nmsg.topic = `campus/b01/f${env.get(\"FLOOR_ID\").toString().padStart(2, '0')}/summary`;\nmsg.payload = { average_temp: (sum / count).toFixed(2) };\nreturn msg;",
         "outputs": 1,
@@ -245,15 +243,14 @@
         "y": 160,
         "wires": [
             [
-                "cee2a852a3c5d418",
-                "254b1a625369f104"
+                "7948595bc866d3be"
             ]
         ]
     },
     {
-        "id": "917085cb33baa342",
+        "id": "4404695e205cdd57",
         "type": "function",
-        "z": "8f9b1e8e42cf78a6",
+        "z": "243020977b743f2f",
         "name": "function 20",
         "func": "msg.topic = msg.responseTopic\nreturn msg;",
         "outputs": 1,
@@ -266,60 +263,98 @@
         "y": 400,
         "wires": [
             [
-                "305409509bf0614a",
-                "cmd_debug"
+                "8d879199a23d4f58",
+                "d770363b0441b276"
             ]
         ]
     },
     {
-        "id": "3440c2a0a2242484",
+        "id": "ed04da2962779772",
+        "type": "mqtt in",
+        "z": "243020977b743f2f",
+        "name": "Verify MQTT Publish",
+        "topic": "campus/b01/+/+/telemetry",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "1186826570dc68e4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 820,
+        "y": 440,
+        "wires": [
+            [
+                "d3461f683b92e44b"
+            ]
+        ]
+    },
+    {
+        "id": "d3461f683b92e44b",
         "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "debug 3",
+        "z": "243020977b743f2f",
+        "name": "Successfully Published!",
         "active": true,
         "tosidebar": true,
         "console": true,
         "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 310,
+        "x": 1050,
         "y": 440,
         "wires": []
     },
     {
-        "id": "ada47216574a6c1b",
+        "id": "d770363b0441b276",
         "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "debug 4",
+        "z": "243020977b743f2f",
+        "name": "Cmd Flow Output",
         "active": true,
         "tosidebar": true,
         "console": true,
         "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 570,
-        "y": 220,
+        "x": 860,
+        "y": 480,
         "wires": []
     },
     {
-        "id": "254b1a625369f104",
+        "id": "3e07e9404bdb4808",
         "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "debug 6",
+        "z": "243020977b743f2f",
+        "name": "Translated MQTT Payload",
         "active": true,
         "tosidebar": true,
         "console": true,
         "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
+        "complete": "true",
+        "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1210,
-        "y": 200,
+        "x": 900,
+        "y": 50,
+        "wires": []
+    },
+    {
+        "id": "73a3306823744ee2",
+        "type": "debug",
+        "z": "243020977b743f2f",
+        "name": "Incoming CMD",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 380,
         "wires": []
     },
     {
@@ -354,100 +389,11 @@
         "sessionExpiry": ""
     },
     {
-        "id": "0b8378e7057112ae",
+        "id": "bdabca05f69acdb8",
         "type": "global-config",
         "env": [],
         "modules": {
             "node-red-contrib-coap": "0.8.0"
         }
-    },
-    {
-        "id": "verify_mqtt_in",
-        "type": "mqtt in",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "Verify MQTT Publish",
-        "topic": "campus/b01/+/+/telemetry",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "1186826570dc68e4",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 820,
-        "y": 440,
-        "wires": [
-            [
-                "verify_debug"
-            ]
-        ]
-    },
-    {
-        "id": "verify_debug",
-        "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "Successfully Published!",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 1050,
-        "y": 440,
-        "wires": []
-    },
-    {
-        "id": "cmd_debug",
-        "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "Cmd Flow Output",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 860,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "translated_mqtt_debug",
-        "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "Translated MQTT Payload",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 900,
-        "y": 50,
-        "wires": []
-    },
-    {
-        "id": "debug_cmd",
-        "type": "debug",
-        "z": "8f9b1e8e42cf78a6",
-        "name": "Incoming CMD",
-        "active": true,
-        "tosidebar": true,
-        "console": true,
-        "tostatus": false,
-        "complete": "true",
-        "targetType": "full",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 320,
-        "y": 320,
-        "wires": []
     }
 ]
