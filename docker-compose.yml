@@ -16,10 +16,10 @@ x-gateway-template: &gateway-template
 
 services:
   hivemq:
-    image: hivemq/hivemq4:latest
+    image: hivemq/hivemq-ce:latest
     container_name: hivemq-hub
     ports:
-      - "1883:1883"
+      - "18830:1883"
       - "8883:8883"
       - "8081:8080"
     volumes:

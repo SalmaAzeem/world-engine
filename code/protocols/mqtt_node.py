@@ -73,6 +73,24 @@ class MQTTNode:
             qos=self.config["mqtt_telemetry_qos"],
         )
 
+        try:
+            if isinstance(payload, str) or isinstance(payload, bytes):
+                data = json.loads(payload)
+            else:
+                data = payload
+                
+            temp_val = data.get("sensors", {}).get("temperature")
+            
+            if temp_val is not None:
+                graph_topic = self.room.telemetry_topic.replace("telemetry", "temperature")
+                self.client.publish(
+                    graph_topic,
+                    str(temp_val),
+                    qos=0
+                )
+        except Exception as e:
+            print(f"[MQTT] Graph publish failed for {self.room.room_id}: {e}")
+
     def _on_connect(self, client, flags, rc, properties):
         self.health_monitor.record_heartbeat(self.room.room_id, self.room.protocol)
         self.health_monitor.set_status(self.room.room_id, "ONLINE")
@@ -120,9 +138,25 @@ class MQTTNode:
             self.room.telemetry_payload(),
             qos=self.config["mqtt_telemetry_qos"],
         )
+
+        payload = self.room.telemetry_payload()
+        
         self.client.publish(
-            self.room.response_topic,
-            self.room.command_response("mqtt"),
-            qos=self.config["mqtt_status_qos"],
+            self.room.telemetry_topic,
+            payload,
+            qos=self.config["mqtt_telemetry_qos"],
         )
+
+        try:
+            if isinstance(payload, str) or isinstance(payload, bytes):
+                data = json.loads(payload)
+            else:
+                data = payload
+                
+            temp_val = data.get("sensors", {}).get("temperature")
+            if temp_val is not None:
+                graph_topic = self.room.telemetry_topic.replace("telemetry", "temperature")
+                self.client.publish(graph_topic, str(temp_val), qos=0)
+        except Exception:
+            pass
         print(f"[MQTT] Applied command to {self.room.room_id} from topic {topic}")
