@@ -1,0 +1,1474 @@
+{
+  "title": "campus noc",
+  "image": null,
+  "mobileHide": false,
+  "mobileOrder": null,
+  "configuration": {
+    "description": "",
+    "widgets": {
+      "362496a7-fb45-8914-bbe8-12a00a46bf61": {
+        "typeFullFqn": "system.alarm_widgets.alarms_table",
+        "type": "alarm",
+        "sizeX": 10.5,
+        "sizeY": 6.5,
+        "config": {
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 86400000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "4px",
+          "settings": {
+            "enableSelection": true,
+            "enableSearch": true,
+            "displayDetails": true,
+            "allowAcknowledgment": true,
+            "allowClear": true,
+            "allowAssign": true,
+            "displayActivity": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "defaultSortOrder": "-createdTime",
+            "enableSelectColumnDisplay": true,
+            "enableStickyAction": false,
+            "enableFilter": true,
+            "entitiesTitle": null,
+            "alarmsTitle": "Alarms"
+          },
+          "title": "Alarms table",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "alarmSource": {
+            "type": "entity",
+            "name": "",
+            "deviceId": null,
+            "entityAliasId": "d9a81192-4543-0590-d89f-dac75ef59d59",
+            "dataKeys": [
+              {
+                "name": "createdTime",
+                "type": "alarm",
+                "label": "Created time",
+                "color": "#2196f3",
+                "settings": {
+                  "useCellStyleFunction": false,
+                  "cellStyleFunction": "",
+                  "useCellContentFunction": false,
+                  "cellContentFunction": ""
+                },
+                "_hash": 0.021092237451093787,
+                "funcBody": null
+              },
+              {
+                "name": "originator",
+                "type": "alarm",
+                "label": "Originator",
+                "color": "#4caf50",
+                "settings": {
+                  "useCellStyleFunction": false,
+                  "cellStyleFunction": "",
+                  "useCellContentFunction": false,
+                  "cellContentFunction": ""
+                },
+                "_hash": 0.2780007688856758,
+                "funcBody": null
+              },
+              {
+                "name": "type",
+                "type": "alarm",
+                "label": "Type",
+                "color": "#f44336",
+                "settings": {
+                  "useCellStyleFunction": false,
+                  "cellStyleFunction": "",
+                  "useCellContentFunction": false,
+                  "cellContentFunction": ""
+                },
+                "_hash": 0.7323586880398418,
+                "funcBody": null
+              },
+              {
+                "name": "severity",
+                "type": "alarm",
+                "label": "Severity",
+                "color": "#ffc107",
+                "settings": {
+                  "useCellStyleFunction": false,
+                  "useCellContentFunction": false
+                },
+                "_hash": 0.09927019860088193,
+                "funcBody": null
+              },
+              {
+                "name": "status",
+                "type": "alarm",
+                "label": "Status",
+                "color": "#607d8b",
+                "settings": {
+                  "useCellStyleFunction": false,
+                  "cellStyleFunction": "",
+                  "useCellContentFunction": false,
+                  "cellContentFunction": ""
+                },
+                "_hash": 0.6588418951443418,
+                "funcBody": null
+              },
+              {
+                "name": "assignee",
+                "type": "alarm",
+                "label": "Assignee",
+                "color": "#9c27b0",
+                "settings": {},
+                "_hash": 0.5008441077416634,
+                "funcBody": null
+              }
+            ],
+            "alarmFilterConfig": {
+              "statusList": [
+                "ACTIVE"
+              ]
+            }
+          },
+          "alarmsPollingInterval": 5,
+          "showTitleIcon": false,
+          "titleIcon": "warning",
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "titleTooltip": "",
+          "widgetStyle": {},
+          "displayTimewindow": true,
+          "actions": {},
+          "configMode": "basic",
+          "alarmFilterConfig": {},
+          "datasources": [],
+          "titleFont": null,
+          "titleColor": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "362496a7-fb45-8914-bbe8-12a00a46bf61"
+      },
+      "02585a82-af7f-f5af-61ee-a3f83eb93292": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "fef07de4-eb16-f70d-cb22-a4c38c5fb57d",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.7354621625081773,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "Humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.43910250686660346,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "hideAggregation": false,
+            "hideAggInterval": false,
+            "hideTimezone": false,
+            "selectedTab": 0,
+            "realtime": {
+              "realtimeType": 0,
+              "interval": 1000,
+              "timewindowMs": 900000,
+              "quickInterval": "CURRENT_DAY",
+              "hideInterval": false,
+              "hideLastInterval": false,
+              "hideQuickInterval": false
+            },
+            "history": {
+              "historyType": 0,
+              "interval": 1000,
+              "timewindowMs": 60000,
+              "fixedTimewindow": null,
+              "quickInterval": "CURRENT_DAY",
+              "hideInterval": false,
+              "hideLastInterval": false,
+              "hideFixedInterval": false,
+              "hideQuickInterval": false
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            },
+            "timezone": null
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT floor 1 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "02585a82-af7f-f5af-61ee-a3f83eb93292"
+      },
+      "7ff85fac-8c4c-00a2-7a44-59b0eb7c4cff": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "c0b6fa00-e432-3fa6-e220-91f6388bc866",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.16443992111348094,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "Humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.33617038142836875,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 2 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "7ff85fac-8c4c-00a2-7a44-59b0eb7c4cff"
+      },
+      "7130900b-5d1e-4840-a3b6-977f26021296": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "d64f24ef-6377-58a5-d6ee-f87f9007cff0",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.20498198503750287,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.16176257939687355,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT floor 3 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "7130900b-5d1e-4840-a3b6-977f26021296"
+      },
+      "8c645f6f-8898-1ed9-e342-a790bd8bab81": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "4e8d67aa-f17f-9648-3a6c-4de3420dd805",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.8179827118773231,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.5904330811393512,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 4 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "8c645f6f-8898-1ed9-e342-a790bd8bab81"
+      },
+      "80eb5da6-3de8-7f66-1384-36f535e3c963": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "35feff1a-214f-ab81-8e26-0ba0a3abb480",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.7226724975387673,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.21473253815221094,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 5 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "80eb5da6-3de8-7f66-1384-36f535e3c963"
+      },
+      "d70669a3-ce15-e95a-e3f0-9d511c7028d3": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "41db1e25-1dac-986f-0b62-0899a670161f",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.4480955661251649,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "Humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.13645335504798595,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 6 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "d70669a3-ce15-e95a-e3f0-9d511c7028d3"
+      },
+      "3b88d333-64ea-7e14-b7a5-51b62814bb62": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "ed3792d1-bae8-5b87-b1b8-7fbd14394fcb",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.14458915091211255,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.1623227667026983,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 7 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "3b88d333-64ea-7e14-b7a5-51b62814bb62"
+      },
+      "d99cc641-5c36-7ce5-bd13-0b571ccccc59": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "9e46f684-0182-ccc9-63ef-f063f899c851",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.7239495496514717,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "Humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.0649953374334925,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT floor 8 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "d99cc641-5c36-7ce5-bd13-0b571ccccc59"
+      },
+      "351cbc5f-16d3-bb1f-d5d4-7c986887b8fb": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "d2eb3c99-0d19-80b7-2932-c82a97f466fc",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.4844065539309582,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.8545365519540351,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 9 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "351cbc5f-16d3-bb1f-d5d4-7c986887b8fb"
+      },
+      "fe1794da-9150-cbc3-af6b-4485e4b78e6c": {
+        "typeFullFqn": "system.cards.timeseries_table",
+        "type": "timeseries",
+        "sizeX": 8,
+        "sizeY": 6.5,
+        "config": {
+          "datasources": [
+            {
+              "type": "entity",
+              "name": "",
+              "entityAliasId": "1d7cd4d4-2341-de7f-ddc1-44eb9874987d",
+              "filterId": null,
+              "dataKeys": [
+                {
+                  "name": "temperature",
+                  "type": "timeseries",
+                  "label": "Temperature",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.5719227856429808,
+                  "units": "°C",
+                  "decimals": 0
+                },
+                {
+                  "name": "humidity",
+                  "type": "timeseries",
+                  "label": "humidity",
+                  "color": "#4caf50",
+                  "settings": {},
+                  "_hash": 0.45415742614772403,
+                  "units": "%",
+                  "decimals": 0
+                }
+              ],
+              "alarmFilterConfig": {
+                "statusList": [
+                  "ACTIVE"
+                ]
+              },
+              "latestDataKeys": []
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "interval": 1000,
+              "timewindowMs": 60000
+            },
+            "aggregation": {
+              "type": "NONE",
+              "limit": 200
+            }
+          },
+          "showTitle": true,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "showTimestamp": true,
+            "displayPagination": true,
+            "defaultPageSize": 10,
+            "enableSearch": true,
+            "enableSelectColumnDisplay": true
+          },
+          "title": "MQTT Floor 10 devices",
+          "dropShadow": true,
+          "enableFullscreen": true,
+          "titleStyle": {
+            "fontSize": "16px",
+            "fontWeight": 400,
+            "padding": "5px 10px 5px 10px"
+          },
+          "useDashboardTimewindow": false,
+          "showLegend": false,
+          "widgetStyle": {},
+          "actions": {},
+          "showTitleIcon": false,
+          "iconColor": "rgba(0, 0, 0, 0.87)",
+          "iconSize": "24px",
+          "displayTimewindow": true,
+          "configMode": "basic",
+          "titleFont": null,
+          "titleColor": null,
+          "titleIcon": null
+        },
+        "row": 0,
+        "col": 0,
+        "id": "fe1794da-9150-cbc3-af6b-4485e4b78e6c"
+      },
+      "aa9728e8-9aa1-e7a7-9920-e8338675b758": {
+        "typeFullFqn": "system.cards.html_card",
+        "type": "static",
+        "sizeX": 7.5,
+        "sizeY": 3,
+        "config": {
+          "datasources": [
+            {
+              "type": "static",
+              "name": "function",
+              "dataKeys": [
+                {
+                  "name": "f(x)",
+                  "type": "function",
+                  "label": "Random",
+                  "color": "#2196f3",
+                  "settings": {},
+                  "_hash": 0.15479322438769105,
+                  "funcBody": "var value = prevValue + Math.random() * 100 - 50;\nvar multiplier = Math.pow(10, 2 || 0);\nvar value = Math.round(value * multiplier) / multiplier;\nif (value < -1000) {\n\tvalue = -1000;\n} else if (value > 1000) {\n\tvalue = 1000;\n}\nreturn value;"
+                }
+              ]
+            }
+          ],
+          "timewindow": {
+            "realtime": {
+              "timewindowMs": 60000
+            }
+          },
+          "showTitle": false,
+          "backgroundColor": "rgb(255, 255, 255)",
+          "color": "rgba(0, 0, 0, 0.87)",
+          "padding": "8px",
+          "settings": {
+            "cardHtml": "<button onclick=\"publish()\">Toggle Heat</button>\r\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/mqtt/4.3.7/mqtt.min.js\"></script>\r\n<script>\r\nfunction publish() {\r\n    var client = mqtt.connect('ws://test.mosquitto.org:8081');\r\n    client.on('connect', function() {\r\n        client.publish('campus/F10/R1110/cmd', \r\n            JSON.stringify({method: \"toggle_heat\", params: true}));\r\n        client.end();\r\n    });\r\n}\r\n</script>",
+            "cardCss": ".card {\n    font-weight: bold;\n    font-size: 32px;\n    color: #999;\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}"
+          },
+          "title": "HTML Card",
+          "dropShadow": true
+        },
+        "row": 0,
+        "col": 0,
+        "id": "aa9728e8-9aa1-e7a7-9920-e8338675b758"
+      }
+    },
+    "states": {
+      "default": {
+        "name": "campus noc",
+        "root": true,
+        "layouts": {
+          "main": {
+            "widgets": {
+              "362496a7-fb45-8914-bbe8-12a00a46bf61": {
+                "sizeX": 36,
+                "sizeY": 7,
+                "row": 0,
+                "col": 0
+              },
+              "02585a82-af7f-f5af-61ee-a3f83eb93292": {
+                "sizeX": 36,
+                "sizeY": 9,
+                "row": 7,
+                "col": 0
+              },
+              "7ff85fac-8c4c-00a2-7a44-59b0eb7c4cff": {
+                "sizeX": 36,
+                "sizeY": 8,
+                "row": 16,
+                "col": 0
+              },
+              "7130900b-5d1e-4840-a3b6-977f26021296": {
+                "sizeX": 36,
+                "sizeY": 10,
+                "row": 24,
+                "col": 0
+              },
+              "8c645f6f-8898-1ed9-e342-a790bd8bab81": {
+                "sizeX": 36,
+                "sizeY": 10,
+                "row": 34,
+                "col": 0
+              },
+              "80eb5da6-3de8-7f66-1384-36f535e3c963": {
+                "sizeX": 36,
+                "sizeY": 11,
+                "row": 44,
+                "col": 0
+              },
+              "d70669a3-ce15-e95a-e3f0-9d511c7028d3": {
+                "sizeX": 36,
+                "sizeY": 10,
+                "row": 55,
+                "col": 0
+              },
+              "3b88d333-64ea-7e14-b7a5-51b62814bb62": {
+                "sizeX": 36,
+                "sizeY": 10,
+                "row": 65,
+                "col": 0
+              },
+              "d99cc641-5c36-7ce5-bd13-0b571ccccc59": {
+                "sizeX": 36,
+                "sizeY": 11,
+                "row": 75,
+                "col": 0
+              },
+              "351cbc5f-16d3-bb1f-d5d4-7c986887b8fb": {
+                "sizeX": 36,
+                "sizeY": 12,
+                "row": 86,
+                "col": 0
+              },
+              "fe1794da-9150-cbc3-af6b-4485e4b78e6c": {
+                "sizeX": 36,
+                "sizeY": 11,
+                "row": 98,
+                "col": 0
+              },
+              "aa9728e8-9aa1-e7a7-9920-e8338675b758": {
+                "sizeX": 5,
+                "sizeY": 3,
+                "row": 109,
+                "col": 0
+              }
+            },
+            "gridSettings": {
+              "layoutType": "default",
+              "backgroundColor": "#eeeeee",
+              "columns": 24,
+              "margin": 10,
+              "outerMargin": true,
+              "backgroundSizeMode": "100%"
+            }
+          }
+        }
+      }
+    },
+    "entityAliases": {
+      "d9a81192-4543-0590-d89f-dac75ef59d59": {
+        "id": "d9a81192-4543-0590-d89f-dac75ef59d59",
+        "alias": "All rooms",
+        "filter": {
+          "type": "deviceType",
+          "resolveMultiple": true,
+          "deviceTypes": [
+            "CoAP-ThermalSensor",
+            "MQTT-ThermalSensor"
+          ],
+          "deviceNameFilter": ""
+        }
+      },
+      "fef07de4-eb16-f70d-cb22-a4c38c5fb57d": {
+        "id": "fef07de4-eb16-f70d-cb22-a4c38c5fb57d",
+        "alias": "floor 1 devices - mqtt",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "5232fcb0-3848-11f1-8ffb-c16432e38b4d",
+            "52bb3f80-3848-11f1-8ffb-c16432e38b4d",
+            "52d0ea60-3848-11f1-8ffb-c16432e38b4d",
+            "52decd10-3848-11f1-8ffb-c16432e38b4d",
+            "52f08050-3848-11f1-8ffb-c16432e38b4d",
+            "5304f2b0-3848-11f1-8ffb-c16432e38b4d",
+            "531a0150-3848-11f1-8ffb-c16432e38b4d",
+            "532c77e0-3848-11f1-8ffb-c16432e38b4d",
+            "5338d3f0-3848-11f1-8ffb-c16432e38b4d",
+            "534445a0-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "c0b6fa00-e432-3fa6-e220-91f6388bc866": {
+        "id": "c0b6fa00-e432-3fa6-e220-91f6388bc866",
+        "alias": "floor 2 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "53b57e00-3848-11f1-8ffb-c16432e38b4d",
+            "53c02c60-3848-11f1-8ffb-c16432e38b4d",
+            "53cb28e0-3848-11f1-8ffb-c16432e38b4d",
+            "53d477b0-3848-11f1-8ffb-c16432e38b4d",
+            "53dded90-3848-11f1-8ffb-c16432e38b4d",
+            "53e7d8a0-3848-11f1-8ffb-c16432e38b4d",
+            "53910610-3848-11f1-8ffb-c16432e38b4d",
+            "53fbd5d0-3848-11f1-8ffb-c16432e38b4d",
+            "5405c0e0-3848-11f1-8ffb-c16432e38b4d",
+            "540db020-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "d64f24ef-6377-58a5-d6ee-f87f9007cff0": {
+        "id": "d64f24ef-6377-58a5-d6ee-f87f9007cff0",
+        "alias": "floor 3 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "5470dec0-3848-11f1-8ffb-c16432e38b4d",
+            "547a7bb0-3848-11f1-8ffb-c16432e38b4d",
+            "548418a0-3848-11f1-8ffb-c16432e38b4d",
+            "548e2ac0-3848-11f1-8ffb-c16432e38b4d",
+            "549c0d70-3848-11f1-8ffb-c16432e38b4d",
+            "54a4e710-3848-11f1-8ffb-c16432e38b4d",
+            "54ad99a0-3848-11f1-8ffb-c16432e38b4d",
+            "54b588e0-3848-11f1-8ffb-c16432e38b4d",
+            "54bed7b0-3848-11f1-8ffb-c16432e38b4d",
+            "54c7b150-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "4e8d67aa-f17f-9648-3a6c-4de3420dd805": {
+        "id": "4e8d67aa-f17f-9648-3a6c-4de3420dd805",
+        "alias": "floor 4 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "55496470-3848-11f1-8ffb-c16432e38b4d",
+            "55539da0-3848-11f1-8ffb-c16432e38b4d",
+            "55610b20-3848-11f1-8ffb-c16432e38b4d",
+            "556b4450-3848-11f1-8ffb-c16432e38b4d",
+            "55768ef0-3848-11f1-8ffb-c16432e38b4d",
+            "5580c820-3848-11f1-8ffb-c16432e38b4d",
+            "558cfd20-3848-11f1-8ffb-c16432e38b4d",
+            "559ab8c0-3848-11f1-8ffb-c16432e38b4d",
+            "55a7d820-3848-11f1-8ffb-c16432e38b4d",
+            "55b1c330-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "35feff1a-214f-ab81-8e26-0ba0a3abb480": {
+        "id": "35feff1a-214f-ab81-8e26-0ba0a3abb480",
+        "alias": "floor 5 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "5642dfa0-3848-11f1-8ffb-c16432e38b4d",
+            "564d8e00-3848-11f1-8ffb-c16432e38b4d",
+            "5656b5c0-3848-11f1-8ffb-c16432e38b4d",
+            "56602ba0-3848-11f1-8ffb-c16432e38b4d",
+            "5669efa0-3848-11f1-8ffb-c16432e38b4d",
+            "5673dab0-3848-11f1-8ffb-c16432e38b4d",
+            "567cdb60-3848-11f1-8ffb-c16432e38b4d",
+            "56860320-3848-11f1-8ffb-c16432e38b4d",
+            "5690b180-3848-11f1-8ffb-c16432e38b4d",
+            "569a2760-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "41db1e25-1dac-986f-0b62-0899a670161f": {
+        "id": "41db1e25-1dac-986f-0b62-0899a670161f",
+        "alias": "Floor 6 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "5721a6e0-3848-11f1-8ffb-c16432e38b4d",
+            "572920f0-3848-11f1-8ffb-c16432e38b4d",
+            "572ffec0-3848-11f1-8ffb-c16432e38b4d",
+            "573751c0-3848-11f1-8ffb-c16432e38b4d",
+            "573e2f90-3848-11f1-8ffb-c16432e38b4d",
+            "57455b80-3848-11f1-8ffb-c16432e38b4d",
+            "574cfca0-3848-11f1-8ffb-c16432e38b4d",
+            "57542890-3848-11f1-8ffb-c16432e38b4d",
+            "575b2d70-3848-11f1-8ffb-c16432e38b4d",
+            "57625960-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "ed3792d1-bae8-5b87-b1b8-7fbd14394fcb": {
+        "id": "ed3792d1-bae8-5b87-b1b8-7fbd14394fcb",
+        "alias": "floor 7 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "57ccdb00-3848-11f1-8ffb-c16432e38b4d",
+            "57d53f70-3848-11f1-8ffb-c16432e38b4d",
+            "57dda3e0-3848-11f1-8ffb-c16432e38b4d",
+            "57e4a8c0-3848-11f1-8ffb-c16432e38b4d",
+            "57ec49e0-3848-11f1-8ffb-c16432e38b4d",
+            "57f5e6d0-3848-11f1-8ffb-c16432e38b4d",
+            "57fd39d0-3848-11f1-8ffb-c16432e38b4d",
+            "58050200-3848-11f1-8ffb-c16432e38b4d",
+            "580cca30-3848-11f1-8ffb-c16432e38b4d",
+            "5814e080-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "9e46f684-0182-ccc9-63ef-f063f899c851": {
+        "id": "9e46f684-0182-ccc9-63ef-f063f899c851",
+        "alias": "floor 8 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "5880e8c0-3848-11f1-8ffb-c16432e38b4d",
+            "588ad3d0-3848-11f1-8ffb-c16432e38b4d",
+            "58955b20-3848-11f1-8ffb-c16432e38b4d",
+            "58a49d60-3848-11f1-8ffb-c16432e38b4d",
+            "58ad01d0-3848-11f1-8ffb-c16432e38b4d",
+            "58b53f30-3848-11f1-8ffb-c16432e38b4d",
+            "58bcb940-3848-11f1-8ffb-c16432e38b4d",
+            "58c48170-3848-11f1-8ffb-c16432e38b4d",
+            "58cd8220-3848-11f1-8ffb-c16432e38b4d",
+            "58d60da0-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "d2eb3c99-0d19-80b7-2932-c82a97f466fc": {
+        "id": "d2eb3c99-0d19-80b7-2932-c82a97f466fc",
+        "alias": "floor 9 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "593b5f20-3848-11f1-8ffb-c16432e38b4d",
+            "59439c80-3848-11f1-8ffb-c16432e38b4d",
+            "594d1260-3848-11f1-8ffb-c16432e38b4d",
+            "59559de0-3848-11f1-8ffb-c16432e38b4d",
+            "595e5070-3848-11f1-8ffb-c16432e38b4d",
+            "59681470-3848-11f1-8ffb-c16432e38b4d",
+            "59761e30-3848-11f1-8ffb-c16432e38b4d",
+            "597f1ee0-3848-11f1-8ffb-c16432e38b4d",
+            "598a1b60-3848-11f1-8ffb-c16432e38b4d",
+            "59953ef0-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      },
+      "1d7cd4d4-2341-de7f-ddc1-44eb9874987d": {
+        "id": "1d7cd4d4-2341-de7f-ddc1-44eb9874987d",
+        "alias": "floor 10 mqtt devices",
+        "filter": {
+          "type": "entityList",
+          "resolveMultiple": true,
+          "entityType": "DEVICE",
+          "entityList": [
+            "59fd0170-3848-11f1-8ffb-c16432e38b4d",
+            "5a053ed0-3848-11f1-8ffb-c16432e38b4d",
+            "5a0e3f80-3848-11f1-8ffb-c16432e38b4d",
+            "5a171920-3848-11f1-8ffb-c16432e38b4d",
+            "5a2019d0-3848-11f1-8ffb-c16432e38b4d",
+            "5a29ddd0-3848-11f1-8ffb-c16432e38b4d",
+            "5a394720-3848-11f1-8ffb-c16432e38b4d",
+            "5a466680-3848-11f1-8ffb-c16432e38b4d",
+            "5a51ff40-3848-11f1-8ffb-c16432e38b4d",
+            "5a5d49e0-3848-11f1-8ffb-c16432e38b4d"
+          ]
+        }
+      }
+    },
+    "filters": {},
+    "timewindow": {
+      "displayValue": "",
+      "hideAggregation": false,
+      "hideAggInterval": false,
+      "hideTimezone": false,
+      "selectedTab": 0,
+      "realtime": {
+        "realtimeType": 0,
+        "interval": 1000,
+        "timewindowMs": 60000,
+        "quickInterval": "CURRENT_DAY",
+        "hideInterval": false,
+        "hideLastInterval": false,
+        "hideQuickInterval": false
+      },
+      "history": {
+        "historyType": 0,
+        "interval": 1000,
+        "timewindowMs": 60000,
+        "fixedTimewindow": {
+          "startTimeMs": 1776117563461,
+          "endTimeMs": 1776203963461
+        },
+        "quickInterval": "CURRENT_DAY",
+        "hideInterval": false,
+        "hideLastInterval": false,
+        "hideFixedInterval": false,
+        "hideQuickInterval": false
+      },
+      "aggregation": {
+        "type": "AVG",
+        "limit": 25000
+      }
+    },
+    "settings": {
+      "stateControllerId": "entity",
+      "showTitle": false,
+      "showDashboardsSelect": true,
+      "showEntitiesSelect": true,
+      "showDashboardTimewindow": true,
+      "showDashboardExport": true,
+      "toolbarAlwaysOpen": true
+    }
+  },
+  "name": "campus noc",
+  "resources": []
+}
