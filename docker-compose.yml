@@ -34,7 +34,7 @@ services:
     image: thingsboard/tb-postgres:latest
     container_name: thingsboard-cloud
     ports:
-      - "9090:8080"
+      - "9090:9090"
       - "1884:1883"
       - "5683-5688:5683-5688/udp"
     environment:
