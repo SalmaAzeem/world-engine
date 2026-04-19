@@ -21,10 +21,11 @@ with open(BASE_DIR / "security_keys.json", "r") as f:
 
 
 class CoAPNode:
-    def __init__(self, room, config, health_monitor):
+    def __init__(self, room, config, health_monitor, token=None):
         self.room = room
         self.config = config
         self.health_monitor = health_monitor
+        self.token = token
         self.site = resource.Site()
         self.telemetry_resource = TelemetryResource(room)
         self.context = None

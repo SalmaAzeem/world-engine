@@ -44,6 +44,8 @@ services:
     restart: always
     depends_on:
       - hivemq
+    volumes:
+      - ./tb_data:/data
 
   engine:
     build: .

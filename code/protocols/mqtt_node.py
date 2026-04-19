@@ -14,11 +14,12 @@ with open(BASE_DIR / "security_keys.json", "r") as f:
 
 
 class MQTTNode:
-    def __init__(self, room, config, health_monitor):
+    def __init__(self, room, config, health_monitor, token=None):
         from collections import OrderedDict
         self.room = room
         self.config = config
         self.health_monitor = health_monitor
+        self.token = token
         self.processed_commands = OrderedDict()
         self.client = Client(
             self._client_id(),
@@ -44,6 +45,9 @@ class MQTTNode:
         return f"{self.config['mqtt_client_prefix']}-{self.room.room_id}"
 
     async def start(self):
+        if self.token:
+            self.client.set_auth_credentials(self.token, None)
+            
         await self.client.connect(
             self.config["mqtt_broker"],
             port=self.config.get("mqtt_tls_port", 8883),

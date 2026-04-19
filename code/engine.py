@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import csv
 import os
 import sqlite3
 import sys
@@ -13,13 +14,39 @@ from protocols import CoAPNode, MQTTNode
 from services import HealthMonitor
 
 
-def create_transports(rooms, config, health_monitor):
+def load_device_tokens():
+    """Loads ThingsBoard tokens from the CSV file into a dictionary."""
+    tokens = {}
+    csv_path = str(BASE_DIR / "devices.csv")
+    
+    if not os.path.exists(csv_path):
+        csv_path = "devices.csv"
+        if not os.path.exists(csv_path):
+            print("[ENGINE] WARNING: devices.csv not found! Nodes will connect without auth.")
+            return tokens
+
+    with open(csv_path, mode='r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            protocol = row['protocol'].lower()
+            room_num = int(row['room'])
+            tokens[(protocol, room_num)] = row['token']
+            
+    print(f"[ENGINE] Loaded {len(tokens)} device tokens from CSV.")
+    return tokens
+
+
+def create_transports(rooms, config, health_monitor, device_tokens):
     transports = {}
     for room in rooms:
+        room_num = int(''.join(filter(str.isdigit, room.room_id)))
+        
+        token = device_tokens.get((room.protocol, room_num))
+
         if room.protocol == "mqtt":
-            transports[room.room_id] = MQTTNode(room, config, health_monitor)
+            transports[room.room_id] = MQTTNode(room, config, health_monitor, token=token)
         else:
-            transports[room.room_id] = CoAPNode(room, config, health_monitor)
+            transports[room.room_id] = CoAPNode(room, config, health_monitor, token=token)
     return transports
 
 
@@ -50,7 +77,6 @@ async def room_loop(room, transport, db_manager, health_monitor, config, real_st
 
 def _startup_jitter(config):
     import random
-
     return random.uniform(0, config["max_jitter"])
 
 
@@ -70,7 +96,10 @@ async def main():
     for room in rooms:
         health_monitor.register_room(room)
 
-    transports = create_transports(rooms, config, health_monitor)
+    device_tokens = load_device_tokens()
+    
+    transports = create_transports(rooms, config, health_monitor, device_tokens)
+    
     await asyncio.gather(*(transport.start() for transport in transports.values()))
 
     print(

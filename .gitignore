@@ -10,3 +10,4 @@ infra/nodered/**/lib/
 infra/nodered/**/node_modules/
 infra/nodered/**/flows_cred.json
 infra/nodered/**/.config.*
+/tb_data
