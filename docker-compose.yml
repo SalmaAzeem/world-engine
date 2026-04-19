@@ -16,7 +16,7 @@ x-gateway-template: &gateway-template
 
 services:
   hivemq:
-    image: hivemq/hivemq-ce:latest
+    image: hivemq/hivemq4:latest
     container_name: hivemq-hub
     ports:
       - "1883:1883"
