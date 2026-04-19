@@ -13,8 +13,8 @@ mqtt_telemetry_qos: 1
 mqtt_status_qos: 1
 mqtt_command_qos: 2
 
-coap_bind_host: "127.0.0.1"
-coap_public_host: "127.0.0.1"
+coap_bind_host: "0.0.0.0"
+coap_public_host: "0.0.0.0"
 coap_base_port: 25000
 coap_server_transports:
   - simple6
