@@ -44,15 +44,12 @@ class MQTTNode:
         return f"{self.config['mqtt_client_prefix']}-{self.room.room_id}"
 
     async def start(self):
-        try:
-            await self.client.connect(
-                self.config["mqtt_broker"],
-                port=self.config.get("mqtt_tls_port", 8883),
-                keepalive=self.config["mqtt_keepalive"],
-                ssl=self.ssl_context
-            )
-        except Exception as e:
-            print(f"[MQTT WAIT] Node {self.room.room_id} dropped by broker rate limit or quota: {e}")
+        await self.client.connect(
+            self.config["mqtt_broker"],
+            port=self.config.get("mqtt_tls_port", 8883),
+            keepalive=self.config["mqtt_keepalive"],
+            ssl=self.ssl_context
+        )
 
     async def stop(self):
         if not self.client.is_connected:
