@@ -1,3 +1,4 @@
 gmqtt==0.7.0
-aiocoap[dtls]
+aiocoap[tinydtls]
 PyYAML
+DTLSSocket
