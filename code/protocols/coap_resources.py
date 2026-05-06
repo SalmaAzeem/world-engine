@@ -6,6 +6,7 @@ import aiocoap
 import aiocoap.resource as resource
 
 from services.command_parser import parse_command_payload
+from services.security_utils import verify_fingerprint
 
 
 JSON_CONTENT_FORMAT = 50
@@ -46,6 +47,12 @@ class HVACActuatorResource(resource.Resource):
         if command is None:
             return _build_error_response("Invalid HVAC command")
 
+        if not verify_fingerprint(command):
+            print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id} (HVAC)!")
+            alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
+            self.telemetry_resource.set_payload(alert_payload)
+            return _build_error_response("Security Tampering Alert: Invalid Hash")
+
         self.room.apply_command(command)
         self.telemetry_resource.set_payload(self.room.telemetry_payload())
         self.health_monitor.record_heartbeat(self.room.room_id, self.room.protocol)
@@ -63,6 +70,12 @@ class LightingActuatorResource(resource.Resource):
         command = parse_command_payload(request.payload, default_action="set_lighting")
         if command is None:
             return _build_error_response("Invalid lighting command")
+
+        if not verify_fingerprint(command):
+            print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id} (Lighting)!")
+            alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
+            self.telemetry_resource.set_payload(alert_payload)
+            return _build_error_response("Security Tampering Alert: Invalid Hash")
 
         self.room.apply_command(command)
         self.telemetry_resource.set_payload(self.room.telemetry_payload())
