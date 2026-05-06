@@ -41,6 +41,9 @@ def parse_command_payload(payload, default_action=None):
             
         if "smoke_detected" in data:
             command["smoke_detected"] = bool(data["smoke_detected"])
+
+        if "signature" in data:
+            command["signature"] = str(data["signature"])
     except (KeyError, TypeError, ValueError, json.JSONDecodeError):
         return None
 
