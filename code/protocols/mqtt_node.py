@@ -118,12 +118,13 @@ class MQTTNode:
             print(f"[MQTT] {self.room.room_id} disconnected")
 
     def _on_message(self, client, topic, payload, qos, properties):
-        command = parse_command_payload(payload)
-        if command is None:
-            print(f"[MQTT] Ignored malformed command for {self.room.room_id}")
+        try:
+            raw_data = json.loads(payload) if isinstance(payload, (str, bytes)) else payload
+        except Exception:
+            print(f"[MQTT] Failed to decode payload for {self.room.room_id}")
             return
 
-        if not verify_fingerprint(command):
+        if not verify_fingerprint(raw_data):
             print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id}!")
             alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
             self.client.publish(
@@ -131,6 +132,11 @@ class MQTTNode:
                 json.dumps(alert_payload),
                 qos=self.config["mqtt_telemetry_qos"]
             )
+            return
+
+        command = parse_command_payload(raw_data)
+        if command is None:
+            print(f"[MQTT] Ignored malformed command for {self.room.room_id}")
             return
 
         # DUP flag & idempotency handler

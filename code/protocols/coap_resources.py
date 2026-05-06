@@ -43,15 +43,20 @@ class HVACActuatorResource(resource.Resource):
         self.health_monitor = health_monitor
 
     async def render_put(self, request):
-        command = parse_command_payload(request.payload, default_action="set_hvac_mode")
-        if command is None:
-            return _build_error_response("Invalid HVAC command")
+        try:
+            raw_data = json.loads(request.payload)
+        except Exception:
+            return _build_error_response("Invalid JSON payload")
 
-        if not verify_fingerprint(command):
+        if not verify_fingerprint(raw_data):
             print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id} (HVAC)!")
             alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
             self.telemetry_resource.set_payload(alert_payload)
             return _build_error_response("Security Tampering Alert: Invalid Hash")
+
+        command = parse_command_payload(raw_data, default_action="set_hvac_mode")
+        if command is None:
+            return _build_error_response("Invalid HVAC command")
 
         self.room.apply_command(command)
         self.telemetry_resource.set_payload(self.room.telemetry_payload())
@@ -67,15 +72,20 @@ class LightingActuatorResource(resource.Resource):
         self.health_monitor = health_monitor
 
     async def render_put(self, request):
-        command = parse_command_payload(request.payload, default_action="set_lighting")
-        if command is None:
-            return _build_error_response("Invalid lighting command")
+        try:
+            raw_data = json.loads(request.payload)
+        except Exception:
+            return _build_error_response("Invalid JSON payload")
 
-        if not verify_fingerprint(command):
+        if not verify_fingerprint(raw_data):
             print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id} (Lighting)!")
             alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
             self.telemetry_resource.set_payload(alert_payload)
             return _build_error_response("Security Tampering Alert: Invalid Hash")
+
+        command = parse_command_payload(raw_data, default_action="set_lighting")
+        if command is None:
+            return _build_error_response("Invalid lighting command")
 
         self.room.apply_command(command)
         self.telemetry_resource.set_payload(self.room.telemetry_payload())
