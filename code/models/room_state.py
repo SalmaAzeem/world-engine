@@ -109,6 +109,23 @@ class RoomState:
             },
         }
 
+    def tampering_alert_payload(self, details):
+        return {
+            "metadata": {
+                "sensor_id": self.room_id,
+                "building": self.building_id,
+                "floor": self.floor_id,
+                "room": self.room_number,
+                "timestamp": int(time.time()),
+                "protocol": self.protocol,
+                "alert_type": "Security Tampering Alert"
+            },
+            "security_alerts": {
+                "tamper_detected": True,
+                "forensic_details": details
+            }
+        }
+
     def command_response(self, source):
         return {
             "room_id": self.room_id,
