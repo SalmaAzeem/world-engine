@@ -3,6 +3,7 @@ import time
 import logging
 import paho.mqtt.client as mqtt
 import random
+from services.security_utils import calculate_fingerprint
 
 HIVE_BROKER = "hivemq"  
 HIVE_PORT = 1883
@@ -59,6 +60,8 @@ def on_tb_message(client, userdata, msg):
             "message_id": f"tb-rpc-{request_id}-{int(time.time())}"
         }
         
+        command_payload["signature"] = calculate_fingerprint(command_payload)
+        
         hive_client.publish(hive_topic, json.dumps(command_payload), qos=1)
         logger.info(f"Forwarded command to HiveMQ: {hive_topic}")
 
@@ -88,7 +91,8 @@ def on_hive_message(client, userdata, msg):
                     "ts": ts,
                     "values": {
                         **payload.get("sensors", {}),
-                        **payload.get("actuators", {})
+                        **payload.get("actuators", {}),
+                        **payload.get("security_alerts", {})
                     }
                 }
             ]
