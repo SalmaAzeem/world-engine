@@ -3,6 +3,7 @@ from __future__ import annotations
 from gmqtt import Client, Message
 
 from services.command_parser import parse_command_payload
+from services.security_utils import verify_fingerprint
 import json
 import ssl
 from pathlib import Path
@@ -120,6 +121,16 @@ class MQTTNode:
         command = parse_command_payload(payload)
         if command is None:
             print(f"[MQTT] Ignored malformed command for {self.room.room_id}")
+            return
+
+        if not verify_fingerprint(command):
+            print(f"[SECURITY TAMPERING ALERT] Invalid hash detected for {self.room.room_id}!")
+            alert_payload = self.room.tampering_alert_payload("SHA-256 Signature Mismatch or Missing")
+            self.client.publish(
+                self.room.telemetry_topic,
+                json.dumps(alert_payload),
+                qos=self.config["mqtt_telemetry_qos"]
+            )
             return
 
         # DUP flag & idempotency handler
