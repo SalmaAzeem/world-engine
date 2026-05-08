@@ -175,6 +175,17 @@ services:
       FLOOR_ID: "10"
     ports:
       - "1892:1880"
+  
+  aggregator:
+    build:
+      context: .
+      dockerfile: Dockerfile.aggregator
+    container_name: aggregator
+    depends_on:
+      - thingsboard
+    networks:
+      - iot_net        # ← this is what was missing
+    restart: unless-stopped
 
 networks:
   iot_net:
