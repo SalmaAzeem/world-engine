@@ -46,12 +46,19 @@ class MQTTNode:
         return f"{self.config['mqtt_client_prefix']}-{self.room.room_id}"
 
     async def start(self):
-        await self.client.connect(
-            self.config["mqtt_broker"],
-            port=self.config.get("mqtt_tls_port", 8883),
-            keepalive=self.config["mqtt_keepalive"],
-            ssl=self.ssl_context
-        )
+        import asyncio
+        while True:
+            try:
+                await self.client.connect(
+                    self.config["mqtt_broker"],
+                    port=self.config.get("mqtt_tls_port", 8883),
+                    keepalive=self.config["mqtt_keepalive"],
+                    ssl=self.ssl_context
+                )
+                break
+            except OSError as e:
+                print(f"[MQTT] Connection to broker failed for {self.room.room_id}: {e}. Retrying in 5 seconds...")
+                await asyncio.sleep(5)
 
     async def stop(self):
         if not self.client.is_connected:
