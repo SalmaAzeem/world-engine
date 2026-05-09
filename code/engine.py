@@ -12,6 +12,7 @@ from db_manager import DBManager
 from fleet import build_fleet
 from protocols import CoAPNode, MQTTNode
 from services import HealthMonitor
+from services.ota_client import FleetOTAClient
 
 
 def load_device_tokens():
@@ -99,8 +100,11 @@ async def main():
     device_tokens = load_device_tokens()
     
     transports = create_transports(rooms, config, health_monitor, device_tokens)
+    ota_client = None
     
     await asyncio.gather(*(transport.start() for transport in transports.values()))
+    ota_client = FleetOTAClient(rooms, config, health_monitor)
+    await ota_client.start()
 
     print(
         f"[ENGINE] Loaded {len(rooms)} rooms "
@@ -136,6 +140,8 @@ async def main():
             task.cancel()
 
         await asyncio.gather(*tasks, return_exceptions=True)
+        if ota_client is not None:
+            await ota_client.stop()
         await asyncio.gather(*(transport.stop() for transport in transports.values()), return_exceptions=True)
 
         print("\n[SHUTDOWN] Flushing DB state...")

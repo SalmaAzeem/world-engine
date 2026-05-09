@@ -1,7 +1,10 @@
 /venv
 /__pycache__
+**/__pycache__/
 /code/__pycache__
 /code/**/__pycache__/
+/thingsboard/__pycache__/
+/thingsboard/setup_role3_demo.py
 /code/venv
 /code/venv/Lib/site-packages/gmqtt
 /code/venv/Lib/site-packages/gmqtt/mqtt/handler.py

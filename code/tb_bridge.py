@@ -92,14 +92,25 @@ def on_hive_message(client, userdata, msg):
                     "values": {
                         **payload.get("sensors", {}),
                         **payload.get("actuators", {}),
+                        **payload.get("lifecycle", {}),
                         **payload.get("security_alerts", {})
                     }
                 }
             ]
         }
+        lifecycle = payload.get("lifecycle", {})
+        attr_payload = {}
+        if lifecycle:
+            attr_payload[device_name] = {
+                "current_version": lifecycle.get("current_version"),
+                "alpha": lifecycle.get("alpha"),
+                "beta": lifecycle.get("beta"),
+            }
         
         tb_client.publish("v1/gateway/connect", json.dumps({"device": device_name, "type": device_type}))
         tb_client.publish("v1/gateway/telemetry", json.dumps(tb_payload), qos=1)
+        if attr_payload:
+            tb_client.publish("v1/gateway/attributes", json.dumps(attr_payload), qos=1)
         logger.info(f"Bridged {device_name} (TS: {ts}) to ThingsBoard")
     except Exception as e:
         logger.error(f"Error bridging telemetry: {e}")

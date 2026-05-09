@@ -35,6 +35,10 @@ def build_fleet(db_manager, config):
                 target_temp=room_state["target_temp"],
                 coap_host=config["coap_public_host"] if protocol == "coap" else None,
                 coap_port=coap_port,
+                ota_parameters={
+                    "alpha": float(config["alpha"]),
+                    "beta": float(config["beta"]),
+                },
             )
         )
 

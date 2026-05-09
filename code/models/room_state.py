@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 def clamp(value, lower, upper):
@@ -26,6 +26,8 @@ class RoomState:
     coap_port: int | None = None
     emergency_lockout: bool = False
     smoke_detected: bool = False
+    current_version: str = "1.0"
+    ota_parameters: dict[str, float] = field(default_factory=dict)
 
     def __post_init__(self):
         self.last_update = int(time.time())
@@ -107,6 +109,11 @@ class RoomState:
                 "lighting_dimmer": self.lighting_dimmer,
                 "emergency_lockout": self.emergency_lockout,
             },
+            "lifecycle": {
+                "current_version": self.current_version,
+                "alpha": self._config_value("alpha", None),
+                "beta": self._config_value("beta", None),
+            },
         }
 
     def tampering_alert_payload(self, details):
@@ -163,6 +170,16 @@ class RoomState:
 
         self.last_update = int(time.time())
 
+    def apply_ota_update(self, version=None, params=None):
+        params = params or {}
+        for key, value in params.items():
+            self.ota_parameters[key] = float(value)
+
+        if version is not None:
+            self.current_version = str(version)
+
+        self.last_update = int(time.time())
+
     def tick(self, simulated_time, config):
         self.occupancy = self._calculate_occupancy(simulated_time)
         outside_temp = self._outside_temperature(simulated_time, config)
@@ -195,8 +212,8 @@ class RoomState:
         )
 
     def _update_temperature(self, outside_temp, config):
-        alpha = config["alpha"]
-        beta = config["beta"]
+        alpha = self._config_value("alpha", config)
+        beta = self._config_value("beta", config)
 
         if self.hvac_mode == "ON":
             hvac_strength = beta
@@ -233,3 +250,10 @@ class RoomState:
             desired_light = self.lighting_dimmer * 5
 
         self.light_level = int(clamp(desired_light, 0, 1000))
+
+    def _config_value(self, key, config):
+        if key in self.ota_parameters:
+            return self.ota_parameters[key]
+        if config is None:
+            return None
+        return config[key]
